@@ -1,0 +1,46 @@
+package com.doantotnghiep.demo.dto.response.admin;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ProductDetailResponse implements Serializable {
+    private Long id;
+
+    private String name;
+
+    @JsonProperty("price")
+    private Long price;
+
+    @JsonProperty("total_quantity")
+    private Integer totalQuantity;
+
+    @JsonProperty("sold_quantity")
+    private Integer soldQuantity;
+
+    @JsonProperty("description")
+    private String description;
+
+    @JsonProperty("manufacturer")
+    private String manufacturer;
+
+    @JsonProperty("total_rating")
+    private Integer totalRating;
+
+    @JsonProperty("total_star")
+    private Long totalStar;
+
+    @JsonProperty("image")
+    private String image;
+
+}
