@@ -39,4 +39,7 @@ public class UserDetailResponse implements Serializable {
 
     @JsonProperty("roles")
     private List<String> roles;
+
+    @JsonProperty("enabled")
+    private Boolean enabled;
 }

@@ -1,6 +1,7 @@
 package com.doantotnghiep.demo.controller.admin;
 
 import com.doantotnghiep.demo.dto.request.admin.AddUserRequest;
+import com.doantotnghiep.demo.dto.request.admin.ModifiedUser;
 import com.doantotnghiep.demo.dto.response.admin.TokenDTO;
 import com.doantotnghiep.demo.dto.response.admin.UserDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.UserListResponse;
@@ -23,14 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 @Slf4j
 @RequiredArgsConstructor
-public class UserController {
+public class AdminUserController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-
-
 
     @PostMapping("/login")
     public TokenDTO login(@RequestParam(required = true, name = "username") String username,
@@ -44,12 +43,22 @@ public class UserController {
         }
     }
 
-    //them user
-    @PostMapping("/admin/user/add")
-    public void addUser(
-            @RequestBody(required = true) AddUserRequest userRequest
+    //chỉnh sửa thông tin cá nhân
+    @PutMapping("/admin/user/modified")
+    public void modifiedUser(
+            @RequestBody(required = true) ModifiedUser modifiedUser
     ) {
-        userService.addUser(userRequest);
+        userService.modifiedUser(modifiedUser);
+    }
+
+    //chỉnh sửa password
+    @GetMapping("/user/change-password")
+    public UserDetailResponse modifiedPassword(
+            @RequestParam(required = true) String username,
+            @RequestParam(required = true) String oldPassword,
+            @RequestParam(required = true) String newPassword
+    ){
+        return userService.modifiedPassword(username,oldPassword,newPassword);
     }
 
     //xem list user
@@ -60,14 +69,6 @@ public class UserController {
             Pageable pageable
     ){
         return userService.getListUser(search,sort,pageable);
-    }
-
-    //chinh sau user
-    @PutMapping("/admin/user/modified")
-    public void modifiedUser(
-            @RequestBody(required = true) AddUserRequest userRequest
-    ) {
-        userService.modifiedUser(userRequest);
     }
 
     //lay chi tiet user
@@ -86,16 +87,7 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    //chỉnh sửa password cho admin
-    @GetMapping("/user/change-password")
-    public UserDetailResponse modifiedPassword(
-            @RequestParam(required = true) String username,
-            @RequestParam(required = true) String oldPassword,
-            @RequestParam(required = true) String newPassword
-    ){
-        return userService.modifiedPassword(username,oldPassword,newPassword);
-    }
-
+    //api lay chi tiết user bằng assetToken
     @GetMapping(value = "/member/me")
     private UserDetailResponse me() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
@@ -103,5 +95,21 @@ public class UserController {
         return userService.getUserDetail(currentUser.getId());
     }
 
+    //Thay đổi quyền của tài khoản
+    @GetMapping(value = "/admin/user/change-role")
+    private UserDetailResponse changeRole(
+            @RequestParam(required = true) Long userId,
+            @RequestParam(required = true) Integer roleEnum
+    ) {
+        return userService.changeRole(userId , roleEnum);
+    }
 
+    //Ban user
+    @GetMapping(value = "/admin/user/ban-user")
+    private UserDetailResponse banUser(
+            @RequestParam(required = true) Long userId,
+            @RequestParam(required = true) Integer banEnum
+    ) {
+        return userService.banUser(userId , banEnum);
+    }
 }

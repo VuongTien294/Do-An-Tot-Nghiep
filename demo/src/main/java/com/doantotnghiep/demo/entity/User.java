@@ -49,5 +49,8 @@ public class User extends BaseModel{
         this.id = id;
     }
 
+    @Column(name = "enabled",columnDefinition = "boolean default true")
+    private Boolean enabled;
+
 
 }

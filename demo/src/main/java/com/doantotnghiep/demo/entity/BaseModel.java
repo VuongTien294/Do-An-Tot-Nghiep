@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 @SuperBuilder(toBuilder = true)
 public class BaseModel implements Serializable {
 
+    private static final long serialVersionUID = 1234567L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = false, updatable = false)
