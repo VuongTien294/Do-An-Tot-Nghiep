@@ -9,6 +9,7 @@ import com.doantotnghiep.demo.dto.response.user.UserPrincipal;
 import com.doantotnghiep.demo.security.JwtCustomException;
 import com.doantotnghiep.demo.security.JwtTokenProvider;
 import com.doantotnghiep.demo.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ public class AdminUserController {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
+    @ApiOperation("Api login cho cả admin và user")
     @PostMapping("/login")
     public TokenDTO login(@RequestParam(required = true, name = "username") String username,
                           @RequestParam(required = true, name = "password") String password) {
@@ -44,6 +46,7 @@ public class AdminUserController {
     }
 
     //chỉnh sửa thông tin cá nhân
+    @ApiOperation("Api chỉnh sửa thông tin cá nhân cho admin")
     @PutMapping("/admin/user/modified")
     public void modifiedUser(
             @RequestBody(required = true) ModifiedUser modifiedUser
@@ -52,6 +55,7 @@ public class AdminUserController {
     }
 
     //chỉnh sửa password
+    @ApiOperation("Api đổi password cho cả admin và user")
     @GetMapping("/user/change-password")
     public UserDetailResponse modifiedPassword(
             @RequestParam(required = true) String username,
@@ -62,6 +66,7 @@ public class AdminUserController {
     }
 
     //xem list user
+    @ApiOperation("Api xem list user cho admin")
     @GetMapping("/admin/user/list")
     public UserListResponse getUserList(
             @RequestParam(required = false) String search,
@@ -72,6 +77,7 @@ public class AdminUserController {
     }
 
     //lay chi tiet user
+    @ApiOperation("Api xem chi tiết 1 user cho admin")
     @GetMapping("/admin/user/{id}")
     public UserDetailResponse getUserDetail(
             @PathVariable(required = true) Long id
@@ -81,6 +87,7 @@ public class AdminUserController {
 
     //xoa user
     @GetMapping("/admin/user/delete")
+    @ApiOperation("Api xóa 1 user cho admin")
     public void deleteUser(
             @RequestParam(required = true) Long id
     ){
@@ -88,6 +95,7 @@ public class AdminUserController {
     }
 
     //api lay chi tiết user bằng assetToken
+    @ApiOperation("Api để lấy thông tin 1 user bằng assetToken.FE sau khi đang nhập thành công thì gọi api này để lấy chi tiết user sau đó lưu vào localStorage")
     @GetMapping(value = "/member/me")
     private UserDetailResponse me() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
@@ -96,6 +104,7 @@ public class AdminUserController {
     }
 
     //Thay đổi quyền của tài khoản
+    @ApiOperation("Api đổi quyền cho user thành admin hoặc member")
     @GetMapping(value = "/admin/user/change-role")
     private UserDetailResponse changeRole(
             @RequestParam(required = true) Long userId,
@@ -105,6 +114,7 @@ public class AdminUserController {
     }
 
     //Ban user
+    @ApiOperation("Api cấm user.Nếu 1 user bị cấm thì khi gọi api login sẽ bị trả về lỗi 500")
     @GetMapping(value = "/admin/user/ban-user")
     private UserDetailResponse banUser(
             @RequestParam(required = true) Long userId,
