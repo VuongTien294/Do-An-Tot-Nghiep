@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,28 +37,31 @@ public class SizeServiceImpl implements SizeService {
         Size size = Size.builder()
                 .name(addSizeRequest.getName())
                 .quantity(addSizeRequest.getQuantity())
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                .isDeleted(false)
                 .product(product).build();
 
         sizeRepository.save(size);
     }
 
-    @Override
-    public void modifiedSize(AddSizeRequest addSizeRequest){
-
-        Size size = sizeRepository.getOne(addSizeRequest.getId());
-        if(size == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy size theo id truyền vào");
-        }
-
-        if(addSizeRequest.getName() != null){
-            size.setName(addSizeRequest.getName());
-        }
-
-        if(addSizeRequest.getQuantity() != null){
-            size.setQuantity(addSizeRequest.getQuantity());
-        }
-
-    }
+//    @Override
+//    public void modifiedSize(AddSizeRequest addSizeRequest){
+//
+//        Size size = sizeRepository.getOne(addSizeRequest.getId());
+//        if(size == null){
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy size theo id truyền vào");
+//        }
+//
+//        if(addSizeRequest.getName() != null){
+//            size.setName(addSizeRequest.getName());
+//        }
+//
+//        if(addSizeRequest.getQuantity() != null){
+//            size.setQuantity(addSizeRequest.getQuantity());
+//        }
+//
+//    }
 
     @Override
     public void deleteSize(Long sizeId){
@@ -72,7 +76,7 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public List<SizeDetailResponse> listSizeByProductId(Long productId){
-        List<Size> list = sizeRepository.getListSizeByproduct(productId);
+        List<Size> list = sizeRepository.getListSizeByproductId(productId);
         List<SizeDetailResponse> response = new ArrayList<>();
         for (Size size: list) {
             response.add(sizeMapper.toListDTO(size));

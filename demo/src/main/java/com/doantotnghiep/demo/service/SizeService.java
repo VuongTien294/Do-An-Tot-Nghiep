@@ -8,7 +8,7 @@ import java.util.List;
 public interface SizeService {
     void addSize(AddSizeRequest addSizeRequest);
 
-    void modifiedSize(AddSizeRequest addSizeRequest);
+//    void modifiedSize(AddSizeRequest addSizeRequest);
 
     void deleteSize(Long sizeId);
 

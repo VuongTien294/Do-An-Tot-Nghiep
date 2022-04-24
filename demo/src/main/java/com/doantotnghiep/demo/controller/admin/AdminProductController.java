@@ -1,9 +1,11 @@
 package com.doantotnghiep.demo.controller.admin;
 
 import com.doantotnghiep.demo.dto.request.admin.AddProductRequest;
+import com.doantotnghiep.demo.dto.request.admin.ModifiedProductRequest;
 import com.doantotnghiep.demo.dto.response.admin.ProductDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.ProductListResponse;
 import com.doantotnghiep.demo.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,11 @@ import org.springframework.data.domain.Pageable;
 @RequestMapping("/api")
 @Slf4j
 @RequiredArgsConstructor
-public class ProductController {
+public class AdminProductController {
 
     private final ProductService productService;
 
+    @ApiOperation("Api cho admin tạo mới 1 product")
     @PostMapping("/admin/product/add")
     public void addProduct(
             @RequestBody(required = true) AddProductRequest addProductRequest
@@ -25,6 +28,7 @@ public class ProductController {
         productService.addProduct(addProductRequest);
     }
 
+    @ApiOperation("Api xem list product cho admin.")
     @GetMapping("/admin/product/list")
     public ProductListResponse getProductList(
             @RequestParam(name = "product_name",required = false) String productName,
@@ -34,13 +38,16 @@ public class ProductController {
         return productService.getListProduct(productName,sort,pageable);
     }
 
-    @PutMapping("/admin/product/modified")
+    @ApiOperation("Api chỉnh sửa product cho admin")
+    @PutMapping("/admin/product/modified/{id}")
     public void modifiedProduct(
-            @RequestBody(required = true) AddProductRequest productRequest
+            @RequestBody(required = true) ModifiedProductRequest productRequest,
+            @PathVariable Long id
     ) {
-        productService.modifiedProduct(productRequest);
+        productService.modifiedProduct(id,productRequest);
     }
 
+    @ApiOperation("Api lấy chi tiết 1 product cho admin")
     @GetMapping("/admin/product/{id}")
     public ProductDetailResponse getProductDetail(
             @PathVariable(required = true) Long id
@@ -48,6 +55,7 @@ public class ProductController {
         return productService.getProductDetail(id);
     }
 
+    @ApiOperation("Api xóa 1 product cho admin")
     @GetMapping("/admin/product/delete")
     public void deleteProduct(
             @RequestParam(required = true) Long id

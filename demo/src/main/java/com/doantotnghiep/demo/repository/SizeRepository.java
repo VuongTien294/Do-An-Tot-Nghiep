@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface SizeRepository extends JpaRepository<Size,Long>, JpaSpecificationExecutor<Size> {
 
-    List<Size> getListSizeByproduct(Long productId);
+    List<Size> getListSizeByproductId(Long productId);
 }

@@ -1,5 +1,6 @@
 package com.doantotnghiep.demo.dto.response.admin;
 
+import com.doantotnghiep.demo.dto.request.admin.AddSizeRequest;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -42,5 +44,8 @@ public class ProductDetailResponse implements Serializable {
 
     @JsonProperty("image")
     private String image;
+
+    @JsonProperty("listSize")
+    private List<SizeDetailResponse> sizeDetailResponses;
 
 }

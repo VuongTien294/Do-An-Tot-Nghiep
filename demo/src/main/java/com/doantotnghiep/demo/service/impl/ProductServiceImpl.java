@@ -1,11 +1,16 @@
 package com.doantotnghiep.demo.service.impl;
 
 import com.doantotnghiep.demo.dto.request.admin.AddProductRequest;
+import com.doantotnghiep.demo.dto.request.admin.ModifiedProductRequest;
 import com.doantotnghiep.demo.dto.response.admin.ProductDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.ProductListResponse;
+import com.doantotnghiep.demo.dto.response.admin.SizeDetailResponse;
 import com.doantotnghiep.demo.entity.Product;
+import com.doantotnghiep.demo.entity.Size;
 import com.doantotnghiep.demo.mapper.ProductMapper;
+import com.doantotnghiep.demo.mapper.SizeMapper;
 import com.doantotnghiep.demo.repository.ProductRepository;
+import com.doantotnghiep.demo.repository.SizeRepository;
 import com.doantotnghiep.demo.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +33,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
     private final ProductRepository productRepository;
+    private final SizeRepository sizeRepository;
+    private final SizeMapper sizeMapper;
 
     @PersistenceContext
     private EntityManager em;
@@ -35,9 +42,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void addProduct(AddProductRequest addProductRequest){
 
+        Integer totalQuantity = 0;
+        for(int i = 0 ; i< addProductRequest.getListSize().size();i++){
+            totalQuantity = totalQuantity + addProductRequest.getListSize().get(i).getQuantity();
+        }
+
         Product product = Product.builder()
                 .name(addProductRequest.getName())
                 .price(addProductRequest.getPrice())
+                .totalQuantity(totalQuantity)
+                .soldQuantity(0)
                 .description(addProductRequest.getDescription())
                 .manufacturer(addProductRequest.getManufacturer())
                 .image(addProductRequest.getImage())
@@ -49,45 +63,78 @@ public class ProductServiceImpl implements ProductService {
                 .technology(addProductRequest.getTechnology())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
+                .totalRating(0)
+                .totalStar(Long.valueOf(0))
                 .isDeleted(false).build();
 
         productRepository.save(product);
 
+        for(int i = 0 ; i< addProductRequest.getListSize().size();i++){
+
+            Size size = Size.builder()
+                    .name(addProductRequest.getListSize().get(i).getName())
+                    .product(product)
+                    .quantity(addProductRequest.getListSize().get(i).getQuantity())
+                    .createdAt(new Timestamp(System.currentTimeMillis()))
+                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+                    .isDeleted(false)
+                    .build();
+
+            sizeRepository.save(size);
+        }
+
     }
 
-    @Override
-    public void modifiedProduct(AddProductRequest addProductRequest){
 
-        Product product = productRepository.getOne(addProductRequest.getId());
+    @Override
+    public void modifiedProduct(Long id, ModifiedProductRequest modifiedProductRequest){
+
+        Product product = productRepository.getOne(id);
         if(product == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy user theo id truyền vào");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy product theo id truyền vào");
         }
 
         product.setId(product.getId());
 
-        if(addProductRequest.getName() != null){
-            product.setName(addProductRequest.getName());
+        if(modifiedProductRequest.getName() != null){
+            product.setName(modifiedProductRequest.getName());
         }
 
-        if(addProductRequest.getPrice() != null){
-            product.setPrice(addProductRequest.getPrice());
+        if(modifiedProductRequest.getPrice() != null){
+            product.setPrice(modifiedProductRequest.getPrice());
         }
 
-        if(addProductRequest.getDescription() != null){
-            product.setDescription(addProductRequest.getDescription());
+        if(modifiedProductRequest.getDescription() != null){
+            product.setDescription(modifiedProductRequest.getDescription());
         }
 
-        if(addProductRequest.getManufacturer() != null){
-            product.setManufacturer(addProductRequest.getManufacturer());
+        if(modifiedProductRequest.getManufacturer() != null){
+            product.setManufacturer(modifiedProductRequest.getManufacturer());
         }
 
-        if(addProductRequest.getImage() != null){
-            product.setImage(addProductRequest.getImage());
+        if(modifiedProductRequest.getImage() != null){
+            product.setImage(modifiedProductRequest.getImage());
         }
 
         product.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
         productRepository.save(product);
+
+        for(int i = 0 ; i< modifiedProductRequest.getListSize().size();i++){
+
+            Size size = sizeRepository.getOne(modifiedProductRequest.getListSize().get(i).getId());
+            if(size == null){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy size theo id truyền vào");
+            }
+
+            size.setName(modifiedProductRequest.getListSize().get(i).getName());
+            size.setQuantity(modifiedProductRequest.getListSize().get(i).getQuantity());
+            size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            sizeRepository.save(size);
+
+            sizeRepository.save(size);
+        }
+
 
     }
 
@@ -110,6 +157,14 @@ public class ProductServiceImpl implements ProductService {
         productDetailResponse.setTotalRating(product.getTotalRating());
         productDetailResponse.setTotalStar(product.getTotalStar());
         productDetailResponse.setImage(product.getImage());
+
+        List<Size> list = sizeRepository.getListSizeByproductId(product.getId());
+        List<SizeDetailResponse> response = new ArrayList<>();
+        for (Size size: list) {
+            response.add(sizeMapper.toListDTO(size));
+        }
+        productDetailResponse.setSizeDetailResponses(response);
+
 
         return productDetailResponse;
 

@@ -13,31 +13,31 @@ import java.util.List;
 @RequestMapping("/api")
 @Slf4j
 @RequiredArgsConstructor
-public class SizeController {
+public class AdminSizeController {
     private final SizeService sizeService;
 
-    @PostMapping("/size/add")
+    @PostMapping("/admin/size/add")
     public void addSize(
             @RequestBody(required = true) AddSizeRequest addSizeRequest
     ) {
         sizeService.addSize(addSizeRequest);
     }
 
-    @GetMapping("/size/list")
+    @GetMapping("/admin/size/list")
     public List<SizeDetailResponse> getSizeList(
             @RequestParam(required = true) Long productId
     ){
         return sizeService.listSizeByProductId(productId);
     }
 
-    @PutMapping("/size/modified")
-    public void modifiedSize(
-            @RequestBody(required = true) AddSizeRequest addSizeRequest
-    ) {
-        sizeService.modifiedSize(addSizeRequest);
-    }
+//    @PutMapping("/size/modified")
+//    public void modifiedSize(
+//            @RequestBody(required = true) AddSizeRequest addSizeRequest
+//    ) {
+//        sizeService.modifiedSize(addSizeRequest);
+//    }
 
-    @GetMapping("/size/delete")
+    @GetMapping("/admin/size/delete")
     public void deleteSize(
             @RequestParam(required = true) Long id
     ){
