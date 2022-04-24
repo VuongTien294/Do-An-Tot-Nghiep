@@ -17,6 +17,7 @@ public class UserMapper {
         dto.setGender(user.getGender());
         dto.setPhone(user.getPhone());
         dto.setRoles(user.getRoles());
+        dto.setEnabled(user.getEnabled());
 
         return dto;
     }
