@@ -1,18 +1,15 @@
-package com.doantotnghiep.demo.dto.response.user;
+package com.doantotnghiep.demo.dto.response.admin;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BillDetailResponse {
+public class AdminBillDetailResponse {
     private Long id;
     private Integer status;
     private Long buyDate;
@@ -20,11 +17,4 @@ public class BillDetailResponse {
     private Long priceTotal;
     private String couponName;
     private String userName;
-
-    @JsonProperty("rows")
-    private List<BillProductDetailResponse> list;
-
-    @JsonProperty("total")
-    private Long total;
-
 }

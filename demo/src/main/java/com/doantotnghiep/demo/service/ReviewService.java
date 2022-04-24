@@ -9,4 +9,7 @@ public interface ReviewService {
 
     //Xem list review cho user
     ReviewListResponse getListReview(Long productId, Pageable pageable);
+
+
+    void deleteReview(Long id);
 }

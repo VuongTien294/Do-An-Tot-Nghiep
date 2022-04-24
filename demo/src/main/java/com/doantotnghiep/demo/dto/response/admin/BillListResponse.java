@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BillListResponse {
     @JsonProperty("rows")
-    private List<BillDetailResponse> list;
+    private List<AdminBillDetailResponse> list;
 
     @JsonProperty("total")
     private Long total;

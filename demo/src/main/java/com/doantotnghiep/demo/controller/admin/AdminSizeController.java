@@ -25,20 +25,6 @@ public class AdminSizeController {
         sizeService.addSize(addSizeRequest);
     }
 
-    @GetMapping("/admin/size/list")
-    public List<SizeDetailResponse> getSizeList(
-            @RequestParam(required = true) Long productId
-    ){
-        return sizeService.listSizeByProductId(productId);
-    }
-
-//    @PutMapping("/size/modified")
-//    public void modifiedSize(
-//            @RequestBody(required = true) AddSizeRequest addSizeRequest
-//    ) {
-//        sizeService.modifiedSize(addSizeRequest);
-//    }
-
     @ApiOperation("Api cho admin xóa 1 size của product")
     @GetMapping("/admin/size/delete")
     public void deleteSize(
@@ -46,6 +32,4 @@ public class AdminSizeController {
     ){
         sizeService.deleteSize(id);
     }
-
-
 }

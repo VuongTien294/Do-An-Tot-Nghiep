@@ -45,24 +45,6 @@ public class SizeServiceImpl implements SizeService {
         sizeRepository.save(size);
     }
 
-//    @Override
-//    public void modifiedSize(AddSizeRequest addSizeRequest){
-//
-//        Size size = sizeRepository.getOne(addSizeRequest.getId());
-//        if(size == null){
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy size theo id truyền vào");
-//        }
-//
-//        if(addSizeRequest.getName() != null){
-//            size.setName(addSizeRequest.getName());
-//        }
-//
-//        if(addSizeRequest.getQuantity() != null){
-//            size.setQuantity(addSizeRequest.getQuantity());
-//        }
-//
-//    }
-
     @Override
     public void deleteSize(Long sizeId){
         Size size = sizeRepository.getOne(sizeId);

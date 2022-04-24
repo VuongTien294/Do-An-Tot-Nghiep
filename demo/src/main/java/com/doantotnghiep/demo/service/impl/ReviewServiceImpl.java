@@ -110,5 +110,16 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewListResponse;
     }
 
+    @Override
+    public void deleteReview(Long id){
+        Review review = reviewRepository.getOne(id);
+        if(review == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy với review id truyền vào");
+        }
+
+        reviewRepository.deleteById(id);
+
+    }
+
 
 }

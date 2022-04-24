@@ -1,12 +1,10 @@
 package com.doantotnghiep.demo.service.impl;
 
-import com.doantotnghiep.demo.dto.request.admin.AddProductRequest;
 import com.doantotnghiep.demo.dto.request.user.AddBillRequest;
-import com.doantotnghiep.demo.dto.response.admin.BillDetailResponse;
+import com.doantotnghiep.demo.dto.response.admin.AdminBillDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
-import com.doantotnghiep.demo.dto.response.admin.CouponDetailResponse;
-import com.doantotnghiep.demo.dto.response.admin.CouponListResponse;
 import com.doantotnghiep.demo.dto.response.user.BillProductDetailResponse;
+import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
 import com.doantotnghiep.demo.entity.*;
 import com.doantotnghiep.demo.mapper.BillMapper;
 import com.doantotnghiep.demo.mapper.BillProductMapper;
@@ -103,7 +101,7 @@ public class BillServiceImpl implements BillService {
         Root<Bill> countRoot = countQuery.from(Bill.class);
         Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
 
-        List<BillDetailResponse> responseDTOS = new ArrayList<>();
+        List<AdminBillDetailResponse> responseDTOS = new ArrayList<>();
         query.getResultList().forEach(bill -> responseDTOS.add(billMapper.toListDTO(bill)));
 
         BillListResponse couponListResponse = new BillListResponse();
@@ -115,7 +113,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public com.doantotnghiep.demo.dto.response.user.BillDetailResponse getBillDetail(Long billId, Integer sortBy, Pageable pageable){
+    public MemberBillDetailResponse getBillDetail(Long billId, Integer sortBy, Pageable pageable){
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<BillProduct> cq = cb.createQuery(BillProduct.class);
         Root<BillProduct> root = cq.from(BillProduct.class);
@@ -150,7 +148,7 @@ public class BillServiceImpl implements BillService {
         List<BillProductDetailResponse> responseDTOS = new ArrayList<>();
         query.getResultList().forEach(bill -> responseDTOS.add(billProductMapper.toListDTO(bill)));
 
-        com.doantotnghiep.demo.dto.response.user.BillDetailResponse billDetailResponse = new com.doantotnghiep.demo.dto.response.user.BillDetailResponse();
+        MemberBillDetailResponse billDetailResponse = new MemberBillDetailResponse();
 
         Bill bill = billRepository.getOne(billId);
 
@@ -179,11 +177,10 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public BillDetailResponse billDetail(Long billId){
+    public void changeBillStatus(Long billId, Integer billStatus){
         Bill bill = billRepository.getOne(billId);
+        bill.setStatus(billStatus);
+        billRepository.save(bill);
 
-        return billMapper.toListDTO(bill);
     }
-
-
 }

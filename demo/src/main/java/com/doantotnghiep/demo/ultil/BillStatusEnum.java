@@ -6,11 +6,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum BillStatusEnum {
 
-    PROCESSING(0), //đang xử lí
-    SOLD(1), //đã mua
-    DONE(2); //đã giao đến
+    CHUA_XU_LY(0),
+    DA_XU_LY(1),
+    DANG_GIAO(2),
+    DA_NHAN(3),
+    DA_HUY(4),
+    ;
 
     @Getter
     private final Integer code;
+
 
 }

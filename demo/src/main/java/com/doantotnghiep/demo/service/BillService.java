@@ -1,8 +1,9 @@
 package com.doantotnghiep.demo.service;
 
 import com.doantotnghiep.demo.dto.request.user.AddBillRequest;
-import com.doantotnghiep.demo.dto.response.admin.BillDetailResponse;
+import com.doantotnghiep.demo.dto.response.admin.AdminBillDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
+import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface BillService {
@@ -10,9 +11,10 @@ public interface BillService {
 
     BillListResponse getListBill(String userName, Integer sortBy, Pageable pageable);
 
-    com.doantotnghiep.demo.dto.response.user.BillDetailResponse getBillDetail(Long billId, Integer sortBy, Pageable pageable);
+    MemberBillDetailResponse getBillDetail(Long billId, Integer sortBy, Pageable pageable);
 
     void deleteBill(Long billId);
 
-    BillDetailResponse billDetail(Long billId);
+    void changeBillStatus(Long billId, Integer billStatus);
+
 }

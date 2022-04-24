@@ -1,13 +1,13 @@
 package com.doantotnghiep.demo.mapper;
 
-import com.doantotnghiep.demo.dto.response.admin.BillDetailResponse;
+import com.doantotnghiep.demo.dto.response.admin.AdminBillDetailResponse;
 import com.doantotnghiep.demo.entity.Bill;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BillMapper {
-    public BillDetailResponse toListDTO(Bill bill) {
-        BillDetailResponse dto = new BillDetailResponse();
+    public AdminBillDetailResponse toListDTO(Bill bill) {
+        AdminBillDetailResponse dto = new AdminBillDetailResponse();
         dto.setId(bill.getId());
         dto.setBuyDate(bill.getBuyDate().getTime());
         dto.setStatus(bill.getStatus());

@@ -1,8 +1,6 @@
 package com.doantotnghiep.demo.mapper;
 
-import com.doantotnghiep.demo.dto.response.admin.BillDetailResponse;
 import com.doantotnghiep.demo.dto.response.user.BillProductDetailResponse;
-import com.doantotnghiep.demo.entity.Bill;
 import com.doantotnghiep.demo.entity.BillProduct;
 import org.springframework.stereotype.Component;
 
