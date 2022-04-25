@@ -1,5 +1,6 @@
 package com.doantotnghiep.demo.service.impl;
 
+import com.doantotnghiep.demo.dto.request.user.AddContactRequest;
 import com.doantotnghiep.demo.dto.response.admin.AdminContactDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.GetArrayResponse;
 import com.doantotnghiep.demo.dto.response.admin.ReviewDetailResponse;
@@ -7,6 +8,7 @@ import com.doantotnghiep.demo.dto.response.admin.ReviewListResponse;
 import com.doantotnghiep.demo.entity.Contact;
 import com.doantotnghiep.demo.entity.Product;
 import com.doantotnghiep.demo.entity.Review;
+import com.doantotnghiep.demo.repository.ContactRepository;
 import com.doantotnghiep.demo.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,8 @@ import java.util.List;
 public class ContactServiceImpl implements ContactService {
     @PersistenceContext
     private EntityManager em;
+
+    private final ContactRepository contactRepository;
 
     @Override
     public GetArrayResponse<Contact> getListContact(Pageable pageable){
@@ -64,7 +69,21 @@ public class ContactServiceImpl implements ContactService {
         return listResponse;
     }
 
-    public void responseContact(){
+    @Override
+    public void addContact(AddContactRequest request){
+         Contact contact = Contact.builder()
+                 .firstName(request.getFirstName())
+                 .lastName(request.getLastName())
+                 .response(false)
+                 .createdAt(new Timestamp(System.currentTimeMillis()))
+                 .updatedAt(new Timestamp(System.currentTimeMillis()))
+                 .isDeleted(false)
+                 .email(request.getEmail())
+                 .message(request.getMessage())
+                 .subject(request.getSubject())
+                 .build();
+
+         contactRepository.save(contact);
 
     }
 }

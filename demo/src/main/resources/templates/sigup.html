@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Author -->
+    <meta name="author" content="Themes Industry">
+    <!-- description -->
+    <meta name="description" content="DeFi For You | DeFi Vietnam | DeFi |">
+    <!-- keywords -->
+    <meta name="keywords" content=" Decentralized Finance built in the Binance Smart Chain.">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"/>
+    <title th:text="#{signup.subject}"></title>
+</head>
+
+<style>
+    .ii a[href] {
+        color: #222222;
+    }
+
+    .gt a {
+        color: #222;
+    }
+
+    a {
+        text-decoration-line: none !important;
+        color: #222222;
+    }
+
+    @media (max-width: 500px) {
+        .logo-dark-1 {
+            height: 50px !important;
+        }
+    }
+</style>
+
+<body style="border: solid 1px #808080;
+             max-width: 850px;
+             background-color: #ffffff !important;">
+<header id="home">
+    <!--Navigation-->
+    <nav>
+        <div class="row no-gutters w-100 wrap-none">
+            <div class="col-3 pl-3" style="height: 100px;">
+
+                <!--Logo Default-->
+                <img width="100%" height="auto" src="https://defi-for-you.s3-ap-southeast-1.amazonaws.com/DeFiVN_banner.png" alt="logo"
+                     class="logo-dark-1">
+
+            </div>
+            <!--Nav Links-->
+        </div>
+    </nav>
+</header>
+
+<div style="padding-top: 5px;">
+    <div style="
+            font-family: Oswald,sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 32px;
+            line-height: 47px;
+            letter-spacing: -0.24px;
+            color: #333333;
+            margin-left: 30px;
+            margin-bottom: -10px;">
+        <span th:text="#{common.dear}">"</span><span style="color:#ffbf00;">.</span>
+    </div>
+
+    <div style="font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        color: #333333;
+        margin-left: 30px;
+        margin-top: -15px;
+        max-width: 90%;">
+        <p th:text="#{signup.content}"></p>
+    </div>
+
+    <div>
+        <!--/*@thymesVar id="url" type="java.lang.String"*/-->
+        <a th:href="${url}">
+            <img style="display: block; margin-left: auto; margin-right: auto;" height="70px"
+                 th:src="#{signup.button_image}" src="" alt="logo" class="logo-dark">
+        </a>
+    </div>
+
+    <div style="font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        color: #333333;
+        margin-left: 30px;
+        margin-top: -5px;
+        max-width: 90%;">
+        <p th:text="#{common.team}"></p>
+    </div>
+
+    <div style="font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 30px;
+        color: #333333;
+        margin-left: 30px;
+        margin-top: -5px;
+        margin-bottom: 15px;
+        max-width: 90%;">
+        <span>DeFi For You</span><span style="color: #ffbf00 !important;">.</span><span>&trade;</span>
+    </div>
+</div>
+</body>
+
+</html>
