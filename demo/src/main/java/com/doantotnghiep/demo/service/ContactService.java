@@ -9,4 +9,6 @@ public interface ContactService {
     GetArrayResponse<Contact> getListContact(Pageable pageable);
 
     void addContact(AddContactRequest request);
+
+    void deleteContact(Long id);
 }

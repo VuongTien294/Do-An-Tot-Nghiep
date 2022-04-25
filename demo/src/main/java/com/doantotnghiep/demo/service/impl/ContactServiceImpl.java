@@ -86,4 +86,9 @@ public class ContactServiceImpl implements ContactService {
          contactRepository.save(contact);
 
     }
+
+    @Override
+    public void deleteContact(Long id){
+        contactRepository.deleteById(id);
+    }
 }
