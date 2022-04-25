@@ -5,11 +5,17 @@ import com.doantotnghiep.demo.dto.request.admin.ModifiedProductRequest;
 import com.doantotnghiep.demo.dto.response.admin.ProductDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.ProductListResponse;
 import com.doantotnghiep.demo.service.ProductService;
+import com.doantotnghiep.demo.service.impl.CoudinaryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
 
 @CrossOrigin(origins = "*", maxAge = -1)
 @RestController
@@ -19,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 public class AdminProductController {
 
     private final ProductService productService;
+    private final CoudinaryService cloudinaryGifService;
 
     @ApiOperation("Api cho admin tạo mới 1 product")
     @PostMapping("/admin/product/add")
@@ -61,5 +68,11 @@ public class AdminProductController {
             @RequestParam(required = true) Long id
     ){
         productService.deleteProduct(id);
+    }
+
+    @ApiOperation("Api trả về link ảnh cho FE")
+    @GetMapping("/admin/product/image")
+    public String upLoad(@RequestParam("file") MultipartFile gifFile){
+        return cloudinaryGifService.uploadFile(gifFile);
     }
 }
