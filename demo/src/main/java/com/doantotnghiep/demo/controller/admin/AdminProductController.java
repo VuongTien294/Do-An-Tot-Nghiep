@@ -71,7 +71,7 @@ public class AdminProductController {
     }
 
     @ApiOperation("Api trả về link ảnh cho FE")
-    @GetMapping("/admin/product/image")
+    @PostMapping("/admin/product/image")
     public String upLoad(@RequestParam("file") MultipartFile gifFile){
         return cloudinaryGifService.uploadFile(gifFile);
     }
