@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,6 +45,18 @@ public class ProductDetailResponse implements Serializable {
 
     @JsonProperty("image")
     private String image;
+
+    private Integer gender;
+
+    private Integer branch;
+
+    private Integer style;
+
+    private Integer color;
+
+    private Integer material;
+
+    private Integer technology;
 
     @JsonProperty("listSize")
     private List<SizeDetailResponse> sizeDetailResponses;

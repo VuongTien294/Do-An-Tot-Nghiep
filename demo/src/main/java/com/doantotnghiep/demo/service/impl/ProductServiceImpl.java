@@ -157,6 +157,12 @@ public class ProductServiceImpl implements ProductService {
         productDetailResponse.setTotalRating(product.getTotalRating());
         productDetailResponse.setTotalStar(product.getTotalStar());
         productDetailResponse.setImage(product.getImage());
+        productDetailResponse.setGender(product.getGender());
+        productDetailResponse.setBranch(product.getBranch());
+        productDetailResponse.setStyle(product.getStyle());
+        productDetailResponse.setColor(product.getColor());
+        productDetailResponse.setMaterial(product.getMaterial());
+        productDetailResponse.setTechnology(product.getTechnology());
 
         List<Size> list = sizeRepository.getListSizeByproductId(product.getId());
         List<SizeDetailResponse> response = new ArrayList<>();
