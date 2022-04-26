@@ -183,13 +183,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id){
-        List<Size> list = sizeRepository.getListSizeByproductId(id);
-        sizeRepository.deleteAll(list);
-
         Product product = productRepository.getOne(id);
         if(product == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy user theo id truyền vào");
         }
+
+        List<Size> list = sizeRepository.getListSizeByproductId(id);
+        sizeRepository.deleteAll(list);
 
         productRepository.deleteById(id);
 
