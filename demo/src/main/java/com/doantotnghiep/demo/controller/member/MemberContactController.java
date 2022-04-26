@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 @Slf4j
 @RequiredArgsConstructor
-public class ContactController {
+public class MemberContactController {
     private final ContactService contactService;
 
     @ApiOperation("Api cho member gửi liên hệ")

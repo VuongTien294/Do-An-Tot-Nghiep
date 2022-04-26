@@ -18,4 +18,8 @@ public interface ProductService {
     void deleteProduct(Long id);
 
     ProductListResponse getListProduct(String productName, Integer sortBy, Pageable pageable);
+
+    ProductListResponse getListProductHomeBestSeller();
+
+    ProductListResponse getListProductForUser(String productName, Integer branch, Integer gender, Integer style, Integer color, Integer material, Integer tech, Integer sortBy, Pageable pageable);
 }

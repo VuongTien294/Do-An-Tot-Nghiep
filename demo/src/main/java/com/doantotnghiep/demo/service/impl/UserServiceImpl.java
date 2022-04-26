@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService , UserDetailsService {
                 .email(addUserRequest.getEmail())
                 .gender(addUserRequest.getGender())
                 .phone(addUserRequest.getPhone())
+                .enabled(true)
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
                 .isDeleted(false).build();

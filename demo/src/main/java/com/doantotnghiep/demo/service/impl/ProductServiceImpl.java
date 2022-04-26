@@ -24,7 +24,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -46,6 +48,9 @@ public class ProductServiceImpl implements ProductService {
         for(int i = 0 ; i< addProductRequest.getListSize().size();i++){
             totalQuantity = totalQuantity + addProductRequest.getListSize().get(i).getQuantity();
         }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
 
         Product product = Product.builder()
                 .name(addProductRequest.getName())
@@ -178,6 +183,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id){
+        List<Size> list = sizeRepository.getListSizeByproductId(id);
+        sizeRepository.deleteAll(list);
 
         Product product = productRepository.getOne(id);
         if(product == null){
@@ -199,6 +206,120 @@ public class ProductServiceImpl implements ProductService {
 
         if (productName != null) {
             listPredicate.add(cb.like(cb.lower(root.get("name")), "%" + productName.toLowerCase() + "%"));
+        }
+
+        Path<Object> sort = null;
+        Order order = null;
+
+        if (sortBy != null) {
+            switch (sortBy) {
+                case 0:
+                    sort = root.get("updatedAt");
+                    order = cb.desc(sort);
+                    break;
+                case 1:
+                    sort = root.get("updatedAt");
+                    order = cb.asc(sort);
+            }
+        }
+
+        Predicate[] finalPredicate = new Predicate[listPredicate.size()];
+        listPredicate.toArray(finalPredicate);
+
+        TypedQuery<Product> query = em.createQuery(cq.select(root).where(cb.and(finalPredicate)).orderBy(order));
+        query.setMaxResults(pageable.getPageSize());
+        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
+
+        List<ProductDetailResponse> responseDTOS = new ArrayList<>();
+        query.getResultList().forEach(product -> responseDTOS.add(productMapper.toListDTO(product)));
+
+        ProductListResponse productListResponse = new ProductListResponse();
+        productListResponse.setList(responseDTOS);
+        productListResponse.setTotal(count);
+
+        return productListResponse;
+    }
+
+    @Override
+    public ProductListResponse getListProductHomeBestSeller(){
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Product> cq = cb.createQuery(Product.class);
+        Root<Product> root = cq.from(Product.class);
+        List<Predicate> listPredicate = new ArrayList<>();
+
+        Path<Object> sort = null;
+        Order order = null;
+
+        sort = root.get("soldQuantity");
+        order = cb.desc(sort);
+
+        Predicate[] finalPredicate = new Predicate[listPredicate.size()];
+        listPredicate.toArray(finalPredicate);
+
+        TypedQuery<Product> query = em.createQuery(cq.select(root).where(cb.and(finalPredicate)).orderBy(order));
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
+
+        List<ProductDetailResponse> responseDTOS = new ArrayList<>();
+
+        List<Product> list = query.getResultList();
+
+        List<Product> response = new ArrayList<>();
+        for(int i = 0 ; i < 16; i++){
+            response.add(list.get(i));
+        }
+
+        response.forEach(product -> responseDTOS.add(productMapper.toListDTO(product)));
+
+
+        ProductListResponse productListResponse = new ProductListResponse();
+        productListResponse.setList(responseDTOS);
+        productListResponse.setTotal(count);
+
+        return productListResponse;
+    }
+
+    @Override
+    public ProductListResponse getListProductForUser(String productName, Integer branch, Integer gender, Integer style, Integer color, Integer material, Integer tech, Integer sortBy, Pageable pageable){
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Product> cq = cb.createQuery(Product.class);
+        Root<Product> root = cq.from(Product.class);
+        List<Predicate> listPredicate = new ArrayList<>();
+
+        if (productName != null) {
+            listPredicate.add(cb.like(cb.lower(root.get("name")), "%" + productName.toLowerCase() + "%"));
+        }
+
+        if(Objects.nonNull(branch)){
+            listPredicate.add(cb.equal((root.get("branch")), branch));
+        }
+
+        if(Objects.nonNull(gender)){
+            listPredicate.add(cb.equal((root.get("gender")), gender));
+        }
+
+        if(Objects.nonNull(style)){
+            listPredicate.add(cb.equal((root.get("style")), style));
+        }
+
+        if(Objects.nonNull(color)){
+            listPredicate.add(cb.equal((root.get("color")), color));
+        }
+
+        if(Objects.nonNull(material)){
+            listPredicate.add(cb.equal((root.get("material")), material));
+        }
+
+        if(Objects.nonNull(tech)){
+            listPredicate.add(cb.equal((root.get("technology")), tech));
         }
 
         Path<Object> sort = null;

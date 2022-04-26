@@ -67,6 +67,10 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.save(review);
 
+        product.setTotalRating(product.getTotalRating() + 1);
+        product.setTotalStar(product.getTotalStar() + addReviewRequest.getStar());
+        productRepository.save(product);
+
     }
 
     //Xem list review cho user

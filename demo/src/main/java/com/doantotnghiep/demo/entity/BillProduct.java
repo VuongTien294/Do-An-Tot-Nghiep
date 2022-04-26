@@ -28,4 +28,10 @@ public class BillProduct extends BaseModel{
     @JoinColumn(name = "bill_id")
     private Bill bill;
 
+    @Column(name = "month")
+    private Integer month;
+
+    @Column(name = "year")
+    private Integer year;
+
 }
