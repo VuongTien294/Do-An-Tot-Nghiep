@@ -82,6 +82,8 @@ public class ReviewServiceImpl implements ReviewService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy với product id truyền vào");
         }
 
+        listPredicate.add(cb.equal((root.get("product").get("id")), productId));
+
         Path<Object> sort = null;
         Order order = null;
 

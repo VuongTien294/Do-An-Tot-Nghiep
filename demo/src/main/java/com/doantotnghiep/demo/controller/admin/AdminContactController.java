@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+
 @CrossOrigin(origins = "*", maxAge = -1)
 @RestController
 @RequestMapping("/api")
@@ -29,6 +31,10 @@ public class AdminContactController {
             @RequestBody(required = true) ContactRequest request
     ){
         Contact contact = contactRepository.getOne(contactId);
+        contact.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        contact.setResponse(true);
+        contactRepository.save(contact);
+
         mailService.sendMail(contact.getLastName(), request.getMessage(), contact.getEmail());
     }
 

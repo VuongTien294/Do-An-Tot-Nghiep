@@ -119,6 +119,8 @@ public class BillServiceImpl implements BillService {
         Root<BillProduct> root = cq.from(BillProduct.class);
         List<Predicate> listPredicate = new ArrayList<>();
 
+        listPredicate.add(cb.equal((root.get("bill").get("id")), billId));
+
         Path<Object> sort = null;
         Order order = null;
 

@@ -26,6 +26,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -191,16 +193,20 @@ public class UserServiceImpl implements UserService , UserDetailsService {
     public UserDetailResponse modifiedPassword(String username, String password, String newPassword) {
 
         User user = userRepository.findUserByusername(username);
+        if (Objects.isNull(user)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không tìm thấy user!");
+        }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sai mật khẩu!");
         }
 
-        if (newPassword.length() < 6) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password mới không đủ 6 kí tự!");
-        }
+//        if (newPassword.length() < 6) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password mới không đủ 6 kí tự!");
+//        }
 
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
 
         UserDetailResponse userRequest = new UserDetailResponse();
         userRequest.setName(user.getName());

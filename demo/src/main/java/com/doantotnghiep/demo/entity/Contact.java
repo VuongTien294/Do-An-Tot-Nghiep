@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -20,5 +21,7 @@ public class Contact extends BaseModel{
     private String email;
     private String subject;
     private String message;
+
+    @Column(name = "response",columnDefinition = "boolean default false")
     private boolean response;
 }
