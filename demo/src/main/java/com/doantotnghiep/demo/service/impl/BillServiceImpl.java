@@ -228,8 +228,12 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void deleteBill(Long billId){
-        Bill coupon = billRepository.getOne(billId);
-        if(coupon == null){
+        Bill bill = billRepository.getOne(billId);
+
+        List<BillProduct> list = billProductRepository.getBillProductByBillId(billId);
+        billProductRepository.deleteAll(list);
+
+        if(bill == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy bill theo id truyền vào");
         }
 
