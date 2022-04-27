@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @SuperBuilder(toBuilder = true)
@@ -29,10 +30,12 @@ public class Product extends BaseModel{
     @Column(name = "sold_quantity")
     private Integer soldQuantity;
 
-    @Column(name = "description")
+//    @Lob
+    @Column(name = "description",columnDefinition = "TEXT",length = 65555)
     private String description; //mo ta dai
 
-    @Column(name = "manufacturer")
+//    @Lob
+    @Column(name = "manufacturer",columnDefinition = "TEXT",length = 65555)
     private String manufacturer; //mo ta ngan
 
     @Column(name = "total_rating")

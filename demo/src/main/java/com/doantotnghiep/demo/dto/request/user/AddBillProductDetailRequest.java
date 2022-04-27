@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class AddBillProductDetailRequest {
     private Long id;
-    private Long unitPrice;
+//    private Long unitPrice;
     private Integer quantity;
     private Long productId;
-    private Long billId;
+    private Long sizeId;
 }

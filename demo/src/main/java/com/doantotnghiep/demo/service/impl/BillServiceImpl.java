@@ -4,15 +4,13 @@ import com.doantotnghiep.demo.dto.request.user.AddBillRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest;
 import com.doantotnghiep.demo.dto.response.admin.AdminBillDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
+import com.doantotnghiep.demo.dto.response.admin.DashBoardBodyResponse;
 import com.doantotnghiep.demo.dto.response.user.BillProductDetailResponse;
 import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
 import com.doantotnghiep.demo.entity.*;
 import com.doantotnghiep.demo.mapper.BillMapper;
 import com.doantotnghiep.demo.mapper.BillProductMapper;
-import com.doantotnghiep.demo.repository.BillProductRepository;
-import com.doantotnghiep.demo.repository.BillRepository;
-import com.doantotnghiep.demo.repository.ProductRepository;
-import com.doantotnghiep.demo.repository.UserRepository;
+import com.doantotnghiep.demo.repository.*;
 import com.doantotnghiep.demo.service.BillService;
 import com.doantotnghiep.demo.ultil.BillStatusEnum;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +39,7 @@ public class BillServiceImpl implements BillService {
     private final BillProductMapper billProductMapper;
     private final BillProductRepository billProductRepository;
     private final ProductRepository productRepository;
+    private final SizeRepository sizeRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -77,13 +76,15 @@ public class BillServiceImpl implements BillService {
 
         Long priceTotal = Long.valueOf(0);
         for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
-            priceTotal = priceTotal + buyRequest.getListBillProducts().get(i).getUnitPrice() * buyRequest.getListBillProducts().get(i).getQuantity();
+            Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
+
+            priceTotal = priceTotal + product.getPrice() * Long.valueOf(buyRequest.getListBillProducts().get(i).getQuantity());
         }
 
         String couponName;
         if(buyRequest.getDiscountPersent() != 0){
             couponName = buyRequest.getCouponName();
-            priceTotal = priceTotal / buyRequest.getDiscountPersent();
+            priceTotal = priceTotal - Long.valueOf(priceTotal * buyRequest.getDiscountPersent()) / Long.valueOf(100);
         }else {
             couponName = "Không có";
         }
@@ -98,6 +99,7 @@ public class BillServiceImpl implements BillService {
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
                 .isDeleted(false).build();
+        billRepository.save(bill);
 
         for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
             Calendar calendar = Calendar.getInstance();
@@ -105,20 +107,30 @@ public class BillServiceImpl implements BillService {
 
 
             Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
+            product.setTotalQuantity(product.getTotalQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
+            product.setSoldQuantity(product.getSoldQuantity() + buyRequest.getListBillProducts().get(i).getQuantity());
+            productRepository.save(product);
+
+            Size size = sizeRepository.getOne(buyRequest.getListBillProducts().get(i).getSizeId());
+            size.setQuantity(size.getQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
+            sizeRepository.save(size);
 
             BillProduct billProduct = BillProduct.builder()
                     .product(product)
                     .bill(bill)
-                    .unitPrice(buyRequest.getListBillProducts().get(i).getUnitPrice())
+                    .unitPrice(product.getPrice())
                     .quantity(buyRequest.getListBillProducts().get(i).getQuantity())
-                    .month(calendar.get(Calendar.MONTH))
+                    .month(calendar.get(Calendar.MONTH) + 1)
                     .year(calendar.get(Calendar.YEAR))
+                    .createdAt(new Timestamp(System.currentTimeMillis()))
+                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+                    .isDeleted(false)
                     .build();
 
             billProductRepository.save(billProduct);
         }
 
-        billRepository.save(bill);
+
     }
 
 

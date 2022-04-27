@@ -1,10 +1,8 @@
 package com.doantotnghiep.demo.controller.member;
 
-import com.doantotnghiep.demo.dto.request.user.AddBillProductRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
 import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
-import com.doantotnghiep.demo.service.BillProductService;
 import com.doantotnghiep.demo.service.BillService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +26,7 @@ public class MemberBillController {
     }
 
     @ApiOperation("Api cho phép khách hàng xem danh sách hàng đã đặt(Điều kiện là phải đăng nhập)")
-    @PostMapping("/member/bill/{userId}")
+    @GetMapping("/member/bill/{userId}")
     public BillListResponse getListBillByUserId(
             @PathVariable Long userId,
             @RequestParam(required = true,defaultValue = "0") Integer sort,
