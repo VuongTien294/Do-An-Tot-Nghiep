@@ -36,4 +36,14 @@ public class MemberBillController {
     ){
         return billService.getListBillForUser(userId, sort,pageable);
     }
+
+    @ApiOperation("Api cho khách hàng lấy chi tiết 1 bill")
+    @GetMapping("/member/bill/{billId}")
+    public MemberBillDetailResponse getDetailBillUser(
+            @PathVariable Long billId,
+            @RequestParam(required = true,defaultValue = "0") Integer sort,
+            Pageable pageable
+    ){
+        return billService.getBillDetail(billId , sort , pageable);
+    }
 }
