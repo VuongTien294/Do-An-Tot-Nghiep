@@ -28,7 +28,7 @@ public class MemberAccountController {
     }
 
     @ApiOperation("Api chỉnh sửa thông tin khách hàng cho khách hàng")
-    @PutMapping("/user/modified")
+    @PutMapping("/member/user/modified")
     public void modifiedUser(
             @RequestBody(required = true) ModifiedUser modifiedUser
     ) {
