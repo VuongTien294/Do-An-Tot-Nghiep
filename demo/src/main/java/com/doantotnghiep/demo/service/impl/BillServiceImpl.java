@@ -2,6 +2,7 @@ package com.doantotnghiep.demo.service.impl;
 
 import com.doantotnghiep.demo.dto.request.user.AddBillRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest;
+import com.doantotnghiep.demo.dto.request.user.BuyRequest2;
 import com.doantotnghiep.demo.dto.response.admin.AdminBillDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
 import com.doantotnghiep.demo.dto.response.admin.DashBoardBodyResponse;
@@ -105,6 +106,60 @@ public class BillServiceImpl implements BillService {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
 
+
+            Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
+            product.setTotalQuantity(product.getTotalQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
+            product.setSoldQuantity(product.getSoldQuantity() + buyRequest.getListBillProducts().get(i).getQuantity());
+            productRepository.save(product);
+
+            Size size = sizeRepository.getOne(buyRequest.getListBillProducts().get(i).getSizeId());
+            size.setQuantity(size.getQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
+            sizeRepository.save(size);
+
+            BillProduct billProduct = BillProduct.builder()
+                    .product(product)
+                    .bill(bill)
+                    .unitPrice(product.getPrice())
+                    .quantity(buyRequest.getListBillProducts().get(i).getQuantity())
+                    .month(calendar.get(Calendar.MONTH) + 1)
+                    .year(calendar.get(Calendar.YEAR))
+                    .createdAt(new Timestamp(System.currentTimeMillis()))
+                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+                    .isDeleted(false)
+                    .build();
+
+            billProductRepository.save(billProduct);
+        }
+
+
+    }
+
+    @Override
+    public void buyProduct2(BuyRequest2 buyRequest){
+        User user = userRepository.getOne(buyRequest.getUserId());
+
+        String couponName;
+        if(buyRequest.getDiscountPersent() != 0){
+            couponName = buyRequest.getCouponName();
+        }else {
+            couponName = "Không có";
+        }
+
+        Bill bill = Bill.builder()
+                .status(BillStatusEnum.CHUA_XU_LY.getCode())
+                .buyDate(new Timestamp(System.currentTimeMillis()))
+                .discountPercent(buyRequest.getDiscountPersent())
+                .priceTotal(buyRequest.getPriceTotal())
+                .couponName(couponName)
+                .user(user)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                .isDeleted(false).build();
+        billRepository.save(bill);
+
+        for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
 
             Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
             product.setTotalQuantity(product.getTotalQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());

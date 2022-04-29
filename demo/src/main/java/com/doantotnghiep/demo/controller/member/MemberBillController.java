@@ -1,6 +1,7 @@
 package com.doantotnghiep.demo.controller.member;
 
 import com.doantotnghiep.demo.dto.request.user.BuyRequest;
+import com.doantotnghiep.demo.dto.request.user.BuyRequest2;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
 import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
 import com.doantotnghiep.demo.service.BillService;
@@ -17,12 +18,20 @@ import org.springframework.web.bind.annotation.*;
 public class MemberBillController {
     private final BillService billService;
 
+//    @ApiOperation("Api cho phép khách hàng đặt hàng(Điều kiện là phải đăng nhập)")
+//    @PostMapping("/member/buy")
+//    public void buy(
+//            @RequestBody BuyRequest buyRequest
+//            ){
+//        billService.buyProduct(buyRequest);
+//    }
+
     @ApiOperation("Api cho phép khách hàng đặt hàng(Điều kiện là phải đăng nhập)")
     @PostMapping("/member/buy")
     public void buy(
-            @RequestBody BuyRequest buyRequest
-            ){
-        billService.buyProduct(buyRequest);
+            @RequestBody BuyRequest2 buyRequest
+    ){
+        billService.buyProduct2(buyRequest);
     }
 
     @ApiOperation("Api cho phép khách hàng xem danh sách hàng đã đặt(Điều kiện là phải đăng nhập)")
