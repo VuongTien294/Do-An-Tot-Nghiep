@@ -266,18 +266,8 @@ public class ProductServiceImpl implements ProductService {
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Product> countRoot = countQuery.from(Product.class);
         Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
-
         List<ProductDetailResponse> responseDTOS = new ArrayList<>();
-
-        List<Product> list = query.getResultList();
-
-        List<Product> response = new ArrayList<>();
-        for(int i = 0 ; i < 16; i++){
-            response.add(list.get(i));
-        }
-
-        response.forEach(product -> responseDTOS.add(productMapper.toListDTO(product)));
-
+        query.getResultList().forEach(product -> responseDTOS.add(productMapper.toListDTO(product)));
 
         ProductListResponse productListResponse = new ProductListResponse();
         productListResponse.setList(responseDTOS);

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberProductController {
     private final ProductService productService;
 
-    @ApiOperation("Api hiển thị 16 product bán chạy nhất trong màn index home")
+    @ApiOperation("Api hiển thị tất cả product lên trang hôm.Nếu số product < 16 FE hiển thị hết.Nếu >= 16 thì chỉ hiển thị 16 product thôi")
     @GetMapping("/product/home")
     public ProductListResponse getBestSellerProduct(
     ){

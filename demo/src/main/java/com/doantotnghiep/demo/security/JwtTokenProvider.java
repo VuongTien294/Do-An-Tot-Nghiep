@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import com.doantotnghiep.demo.dto.response.admin.TokenDTO;
+import com.doantotnghiep.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public TokenDTO createToken(String username) {
+    public TokenDTO createToken(String username, User user) {
         Claims claims = Jwts.claims().setSubject(username);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -55,6 +56,8 @@ public class JwtTokenProvider {
         TokenDTO authenDTO = new TokenDTO();
         authenDTO.setExpirationTime(validityInMilliseconds);
         authenDTO.setAccessToken(accessToken);
+        authenDTO.setUserId(user.getId());
+        authenDTO.setName(authenDTO.getName());
         return authenDTO;
     }
 

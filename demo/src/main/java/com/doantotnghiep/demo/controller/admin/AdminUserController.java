@@ -6,6 +6,8 @@ import com.doantotnghiep.demo.dto.response.admin.TokenDTO;
 import com.doantotnghiep.demo.dto.response.admin.UserDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.UserListResponse;
 import com.doantotnghiep.demo.dto.response.user.UserPrincipal;
+import com.doantotnghiep.demo.entity.User;
+import com.doantotnghiep.demo.repository.UserRepository;
 import com.doantotnghiep.demo.security.JwtCustomException;
 import com.doantotnghiep.demo.security.JwtTokenProvider;
 import com.doantotnghiep.demo.service.UserService;
@@ -20,6 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @CrossOrigin(origins = "*", maxAge = -1)
 @RestController
 @RequestMapping("/api")
@@ -31,15 +35,24 @@ public class AdminUserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @ApiOperation("Api login cho cả admin và user")
     @PostMapping("/login")
     public TokenDTO login(@RequestParam(required = true, name = "username") String username,
                           @RequestParam(required = true, name = "password") String password) {
         try {
+
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            System.out.println("/////////////////////////////////////////");
-            return jwtTokenProvider.createToken(username);
+            if(Objects.nonNull(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)).getPrincipal())){
+                UserPrincipal currentUser = (UserPrincipal) authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)).getPrincipal();
+                User user = userRepository.findById(currentUser.getId()).get();
+                return jwtTokenProvider.createToken(username ,user);
+            }
+
+            return null;
+
         } catch (Exception e) {
             throw new JwtCustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -100,6 +113,7 @@ public class AdminUserController {
     private UserDetailResponse me() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
+        log.info("///////////////// User Principal : {} "+currentUser);
         return userService.getUserDetail(currentUser.getId());
     }
 
