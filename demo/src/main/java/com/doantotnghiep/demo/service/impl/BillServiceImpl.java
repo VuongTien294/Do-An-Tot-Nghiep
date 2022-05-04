@@ -87,7 +87,7 @@ public class BillServiceImpl implements BillService {
             couponName = buyRequest.getCouponName();
             priceTotal = priceTotal - Long.valueOf(priceTotal * buyRequest.getDiscountPersent()) / Long.valueOf(100);
         }else {
-            couponName = "Không có";
+            couponName = "Nonce Coupon";
         }
 
         Bill bill = Bill.builder()
@@ -142,7 +142,7 @@ public class BillServiceImpl implements BillService {
         if(buyRequest.getDiscountPersent() != 0){
             couponName = buyRequest.getCouponName();
         }else {
-            couponName = "Không có";
+            couponName = "Nonce Coupon";
         }
 
         Bill bill = Bill.builder()
