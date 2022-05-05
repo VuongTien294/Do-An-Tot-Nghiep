@@ -125,22 +125,42 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
 
+//        for(int i = 0 ; i< modifiedProductRequest.getListSize().size();i++){
+//
+//            Size size = sizeRepository.getOne(modifiedProductRequest.getListSize().get(i).getId());
+//            if(size == null){
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy size theo id truyền vào");
+//            }
+//
+//            size.setName(modifiedProductRequest.getListSize().get(i).getName());
+//            size.setQuantity(modifiedProductRequest.getListSize().get(i).getQuantity());
+//            size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+//
+//            sizeRepository.save(size);
+//        }
+
         for(int i = 0 ; i< modifiedProductRequest.getListSize().size();i++){
 
-            Size size = sizeRepository.getOne(modifiedProductRequest.getListSize().get(i).getId());
-            if(size == null){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Không tìm thấy size theo id truyền vào");
+            if(modifiedProductRequest.getListSize().get(i).getId() != null){
+                Size size = sizeRepository.getOne(modifiedProductRequest.getListSize().get(i).getId());
+                size.setName(modifiedProductRequest.getListSize().get(i).getName());
+                size.setQuantity(modifiedProductRequest.getListSize().get(i).getQuantity());
+                size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+                sizeRepository.save(size);
+            }else {
+                Size size = Size.builder()
+                        .name(modifiedProductRequest.getListSize().get(i).getName())
+                        .quantity(modifiedProductRequest.getListSize().get(i).getQuantity())
+                        .createdAt(new Timestamp(System.currentTimeMillis()))
+                        .updatedAt(new Timestamp(System.currentTimeMillis()))
+                        .isDeleted(false)
+                        .product(product)
+                        .build();
+
+                sizeRepository.save(size);
+
             }
-
-            size.setName(modifiedProductRequest.getListSize().get(i).getName());
-            size.setQuantity(modifiedProductRequest.getListSize().get(i).getQuantity());
-            size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            sizeRepository.save(size);
-
-            sizeRepository.save(size);
         }
-
-
     }
 
     @Override
