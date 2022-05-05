@@ -2,6 +2,7 @@ package com.doantotnghiep.demo.security;
 
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -53,11 +54,27 @@ public class JwtTokenProvider {
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secretKey)//
                 .compact();
+
+        String role;
+        List<String> roles = user.getRoles();
+        if(roles.get(0).equals("ROLE_ADMIN")){
+            role = "ROLE_ADMIN";
+        }else {
+            role = "ROLE_MEMBER";
+        }
+
         TokenDTO authenDTO = new TokenDTO();
         authenDTO.setExpirationTime(validityInMilliseconds);
         authenDTO.setAccessToken(accessToken);
         authenDTO.setUserId(user.getId());
-        authenDTO.setName(authenDTO.getName());
+        authenDTO.setName(user.getName());
+        authenDTO.setAddress(user.getAddress());
+        authenDTO.setAge(user.getAge());
+        authenDTO.setEmail(user.getEmail());
+        authenDTO.setGender(user.getGender());
+        authenDTO.setPhone(user.getPhone());
+        authenDTO.setRole(role);
+        authenDTO.setEnabled(user.getEnabled());
         return authenDTO;
     }
 
