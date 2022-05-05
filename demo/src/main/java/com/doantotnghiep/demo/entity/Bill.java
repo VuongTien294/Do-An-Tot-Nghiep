@@ -30,7 +30,7 @@ public class Bill extends BaseModel{
     @Column(name = "coupon_name")
     private String couponName;
 
-    @OneToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }
