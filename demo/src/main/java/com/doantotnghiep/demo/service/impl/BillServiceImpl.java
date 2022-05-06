@@ -282,7 +282,7 @@ public class BillServiceImpl implements BillService {
         billDetailResponse.setId(bill.getId());
         billDetailResponse.setStatus(bill.getStatus());
         billDetailResponse.setBuyDate(bill.getBuyDate().getTime());
-        billDetailResponse.setDiscountPercent(billDetailResponse.getDiscountPercent());
+        billDetailResponse.setDiscountPercent(bill.getDiscountPercent());
         billDetailResponse.setPriceTotal(bill.getPriceTotal());
         billDetailResponse.setCouponName(bill.getCouponName());
         billDetailResponse.setUserName(bill.getUser().getName());
