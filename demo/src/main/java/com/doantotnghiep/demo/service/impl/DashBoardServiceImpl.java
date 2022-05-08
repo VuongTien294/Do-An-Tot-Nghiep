@@ -47,7 +47,7 @@ public class DashBoardServiceImpl implements DashBoardService {
         List<Product> listProduct = productRepository.findAll();
         for(int i = 0;i<listProduct.size();i++){
             countProductTotal = countProductTotal + listProduct.get(i).getTotalQuantity();
-            countProductSelled = countProductTotal + listProduct.get(i).getSoldQuantity();
+            countProductSelled = countProductSelled + listProduct.get(i).getSoldQuantity();
         }
 
         Map<String,Long> map = new HashMap<>();
