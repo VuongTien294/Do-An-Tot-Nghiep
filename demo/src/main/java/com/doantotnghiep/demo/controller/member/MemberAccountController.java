@@ -2,6 +2,7 @@ package com.doantotnghiep.demo.controller.member;
 
 import com.doantotnghiep.demo.dto.request.admin.AddUserRequest;
 import com.doantotnghiep.demo.dto.request.admin.ModifiedUser;
+import com.doantotnghiep.demo.dto.response.admin.UserDetailResponse;
 import com.doantotnghiep.demo.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,14 @@ public class MemberAccountController {
             @RequestBody(required = true) ModifiedUser modifiedUser
     ) {
         userService.modifiedUser(modifiedUser);
+    }
+
+    @ApiOperation("Api xem chi tiết 1 user")
+    @GetMapping("/user/{id}")
+    public UserDetailResponse getUserDetail(
+            @PathVariable(required = true) Long id
+    ){
+        return userService.getUserDetail(id);
     }
 
 }
