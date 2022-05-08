@@ -18,22 +18,27 @@ public class CoudinaryService {
         this.cloudinary = cloudinary;
     }
 
-//    private final Cloudinary cloudinaryConfig;
-//
-//    public CoudinaryService(Cloudinary cloudinaryConfig) {
-//        this.cloudinaryConfig = cloudinaryConfig;
-//    }
-
-//    private final CloudinaryConfig cloudinaryConfig;
-//
-//    public CoudinaryService(CloudinaryConfig cloudinaryConfig) {
-//        this.cloudinaryConfig = cloudinaryConfig;
-//    }
-
     public String uploadFile(MultipartFile gif) {
         try {
             File uploadedFile = convertMultiPartToFile(gif);
             Map uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
+            boolean isDeleted = uploadedFile.delete();
+
+            if (isDeleted){
+                System.out.println("File successfully deleted");
+            }else
+                System.out.println("File doesn't exist");
+            return  uploadResult.get("url").toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String uploadVideo(MultipartFile gif) {
+        try {
+            File uploadedFile = convertMultiPartToFile(gif);
+            Map uploadResult = cloudinary.uploader().uploadLarge(uploadedFile,  ObjectUtils.asMap("resource_type", "video"));
+
             boolean isDeleted = uploadedFile.delete();
 
             if (isDeleted){
