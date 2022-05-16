@@ -26,7 +26,7 @@ public class MemberBillController {
 //        billService.buyProduct(buyRequest);
 //    }
 
-    @ApiOperation("Api cho phép khách hàng đặt hàng(Điều kiện là phải đăng nhập)")
+    @ApiOperation("Api cho phép khách hàng đặt hàng(Nếu đăng nhập rồi thì truyền user id còn ko thì truyền các thông tin cơ bản của user)")
     @PostMapping("/member/buy")
     public void buy(
             @RequestBody BuyRequest2 buyRequest

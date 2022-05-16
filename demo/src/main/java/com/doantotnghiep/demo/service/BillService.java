@@ -1,5 +1,7 @@
 package com.doantotnghiep.demo.service;
 
+import com.doantotnghiep.demo.dto.request.admin.ChangeBillStatus;
+import com.doantotnghiep.demo.dto.request.admin.UpdateShipper;
 import com.doantotnghiep.demo.dto.request.user.AddBillRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest2;
@@ -22,7 +24,9 @@ public interface BillService {
 
     void deleteBill(Long billId);
 
-    void changeBillStatus(Long billId, Integer billStatus);
+    void changeBillStatus(Long billId, ChangeBillStatus changeBillStatus);
 
     BillListResponse getListBillForUser(Long userId, Integer sortBy, Pageable pageable);
+
+    void updateShipper(Long billId, UpdateShipper updateShipper);
 }

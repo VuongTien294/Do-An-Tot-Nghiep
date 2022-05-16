@@ -16,6 +16,13 @@ public class BillMapper {
         dto.setUserName(bill.getUser().getName());
         dto.setPriceTotal(bill.getPriceTotal());
 
+        if(bill.getShipperName() != null){
+            dto.setShipperName(bill.getShipperName());
+        }
+
+        if(bill.getShipperName() != null){
+            dto.setShipperPhone(bill.getShipperPhone());
+        }
         return dto;
     }
 }

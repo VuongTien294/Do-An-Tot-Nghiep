@@ -44,13 +44,15 @@ public class User extends BaseModel{
     @Column(name = "role")
     private List<String> roles;
 
+    @Column(name = "enabled",columnDefinition = "boolean default true")
+    private Boolean enabled;
+
     public User(Long id) {
         super();
         this.id = id;
     }
 
-    @Column(name = "enabled",columnDefinition = "boolean default true")
-    private Boolean enabled;
+
 
 
 }

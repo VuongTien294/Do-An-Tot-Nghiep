@@ -33,4 +33,13 @@ public class Bill extends BaseModel{
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "reason_cancel")
+    private String reasonCancel;
+
+    @Column(name = "shipper_name")
+    private String shipperName;
+
+    @Column(name = "shipper_phone")
+    private String shipperPhone;
 }

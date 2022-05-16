@@ -1,5 +1,7 @@
 package com.doantotnghiep.demo.service.impl;
 
+import com.doantotnghiep.demo.dto.request.admin.ChangeBillStatus;
+import com.doantotnghiep.demo.dto.request.admin.UpdateShipper;
 import com.doantotnghiep.demo.dto.request.user.AddBillRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest;
 import com.doantotnghiep.demo.dto.request.user.BuyRequest2;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,6 +30,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -41,6 +45,8 @@ public class BillServiceImpl implements BillService {
     private final BillProductRepository billProductRepository;
     private final ProductRepository productRepository;
     private final SizeRepository sizeRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @PersistenceContext
     private EntityManager em;
@@ -136,7 +142,30 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void buyProduct2(BuyRequest2 buyRequest){
-        User user = userRepository.getOne(buyRequest.getUserId());
+
+        User user;
+        if(buyRequest.getUserId() != null){
+            user = userRepository.getOne(buyRequest.getUserId());
+        }else {
+            List<String> listRoles = Arrays.asList("ROLE_MEMBER");
+
+            user = userRepository.save(User.builder()
+                    .name(buyRequest.getName())
+                    .roles(listRoles)
+                    .username("guest")
+                    .password(passwordEncoder.encode("1"))
+                    .address(buyRequest.getAddress())
+                    .age(buyRequest.getAge())
+                    .email(buyRequest.getEmail())
+                    .gender(buyRequest.getGender())
+                    .phone(buyRequest.getPhone())
+                    .enabled(true)
+                    .createdAt(new Timestamp(System.currentTimeMillis()))
+                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+                    .isDeleted(false).build());
+
+        }
+
 
         String couponName;
         if(buyRequest.getDiscountPersent() != 0){
@@ -286,6 +315,9 @@ public class BillServiceImpl implements BillService {
         billDetailResponse.setPriceTotal(bill.getPriceTotal());
         billDetailResponse.setCouponName(bill.getCouponName());
         billDetailResponse.setUserName(bill.getUser().getName());
+        billDetailResponse.setShipperName(bill.getShipperName());
+        billDetailResponse.setShipperPhone(bill.getShipperPhone());
+
         billDetailResponse.setList(responseDTOS);
         billDetailResponse.setTotal(count);
 
@@ -308,9 +340,14 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public void changeBillStatus(Long billId, Integer billStatus){
+    public void changeBillStatus(Long billId, ChangeBillStatus changeBillStatus){
         Bill bill = billRepository.getOne(billId);
-        bill.setStatus(billStatus);
+        bill.setStatus(changeBillStatus.getBillStatus());
+
+        if(changeBillStatus.getReasonCancel() != null){
+            bill.setReasonCancel(changeBillStatus.getReasonCancel());
+        }
+
         billRepository.save(bill);
 
     }
@@ -358,6 +395,16 @@ public class BillServiceImpl implements BillService {
         couponListResponse.setTotal(count);
 
         return couponListResponse;
+
+    }
+
+    @Override
+    public void updateShipper(Long billId, UpdateShipper updateShipper){
+        Bill bill = billRepository.getOne(billId);
+        bill.setShipperName(updateShipper.getShipperName());
+        bill.setShipperPhone(updateShipper.getShipperPhone());
+
+        billRepository.save(bill);
 
     }
 }

@@ -20,6 +20,9 @@ public class MemberBillDetailResponse {
     private Long priceTotal;
     private String couponName;
     private String userName;
+    private String shipperName;
+    private String shipperPhone;
+
     @JsonProperty("total")
     private Long total;
 

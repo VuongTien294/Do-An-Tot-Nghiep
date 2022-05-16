@@ -12,4 +12,15 @@ public class BuyRequest2 {
     private Long priceTotal;
 
     private List<AddBillProductDetailRequest> listBillProducts;
+
+    //Khi ko có user trong db
+    private String name;
+    private Integer age;
+//    private String username;
+//    private String password;
+    private String address;
+    private String gender;
+    private String phone;
+    private String email;
+
 }

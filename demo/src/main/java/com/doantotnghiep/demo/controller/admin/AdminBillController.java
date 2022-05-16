@@ -1,5 +1,7 @@
 package com.doantotnghiep.demo.controller.admin;
 
+import com.doantotnghiep.demo.dto.request.admin.ChangeBillStatus;
+import com.doantotnghiep.demo.dto.request.admin.UpdateShipper;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
 import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
 import com.doantotnghiep.demo.service.BillService;
@@ -45,15 +47,22 @@ public class AdminBillController {
         return billService.getBillDetail(billId , sort , pageable);
     }
 
-    @ApiOperation("Api cho admin đổi trạng thái của 1 bill")
+    @ApiOperation("Api cho admin đổi trạng thái của 1 bill.Nếu là cancel bill thì truyền lí do ko thì thôi")
     @GetMapping("/admin/bill/change-status/{billId}")
     public void changeBillStatus(
             @PathVariable Long billId,
-            @RequestParam Integer billStatus
+            @RequestBody ChangeBillStatus changeBillStatus
     ){
-        billService.changeBillStatus(billId , billStatus);
+        billService.changeBillStatus(billId , changeBillStatus);
     }
 
-
+    @ApiOperation("Api cho admin update lại shipper từ tên đến số điện thoại")
+    @PutMapping("/admin/bill/update-shipper/{billId}")
+    public void changeBillShipper(
+            @PathVariable Long billId,
+            @RequestBody UpdateShipper updateShipper
+    ){
+        billService.updateShipper(billId , updateShipper);
+    }
 
 }
