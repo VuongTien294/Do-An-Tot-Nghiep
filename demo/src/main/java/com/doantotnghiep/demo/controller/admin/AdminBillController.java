@@ -48,7 +48,7 @@ public class AdminBillController {
     }
 
     @ApiOperation("Api cho admin đổi trạng thái của 1 bill.Nếu là cancel bill thì truyền lí do ko thì thôi")
-    @GetMapping("/admin/bill/change-status/{billId}")
+    @PostMapping("/admin/bill/change-status/{billId}")
     public void changeBillStatus(
             @PathVariable Long billId,
             @RequestBody ChangeBillStatus changeBillStatus
