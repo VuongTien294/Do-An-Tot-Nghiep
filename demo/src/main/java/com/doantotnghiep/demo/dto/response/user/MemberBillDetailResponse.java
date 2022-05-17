@@ -19,7 +19,7 @@ public class MemberBillDetailResponse {
     private Integer discountPercent;
     private Long priceTotal;
     private String couponName;
-    private String userName;
+    private String Name;
     private String shipperName;
     private String shipperPhone;
 

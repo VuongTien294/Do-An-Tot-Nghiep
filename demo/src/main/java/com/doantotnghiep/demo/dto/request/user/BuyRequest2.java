@@ -23,4 +23,6 @@ public class BuyRequest2 {
     private String phone;
     private String email;
 
+    private Integer billType;
+
 }
