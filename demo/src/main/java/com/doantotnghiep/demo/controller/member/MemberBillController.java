@@ -27,7 +27,7 @@ public class MemberBillController {
 //    }
 
     @ApiOperation("Api cho phép khách hàng đặt hàng(Nếu truyền user id thì tạo 1 bill gắn với user đó và update lại theo FE truyền vào.Nếu ko thì tạo 1 user mới có username = guest,password = 1)")
-    @PostMapping("/member/buy")
+    @PostMapping("/buy")
     public void buy(
             @RequestBody BuyRequest2 buyRequest
     ){
