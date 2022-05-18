@@ -143,37 +143,38 @@ public class BillServiceImpl implements BillService {
     @Override
     public void buyProduct2(BuyRequest2 buyRequest){
 
-        User user;
-        if(buyRequest.getBillType() == 0){
-            user = userRepository.getOne(buyRequest.getUserId());
-        }else if(buyRequest.getBillType() == 1){
-            List<String> listRoles = Arrays.asList("ROLE_MEMBER");
-
-            user = userRepository.save(User.builder()
-                    .name(buyRequest.getName())
-                    .roles(listRoles)
-                    .username("guest")
-                    .password(passwordEncoder.encode("1"))
-                    .address(buyRequest.getAddress())
-                    .age(buyRequest.getAge())
-                    .email(buyRequest.getEmail())
-                    .gender(buyRequest.getGender())
-                    .phone(buyRequest.getPhone())
-                    .enabled(true)
-                    .createdAt(new Timestamp(System.currentTimeMillis()))
-                    .updatedAt(new Timestamp(System.currentTimeMillis()))
-                    .isDeleted(false).build());
-
-        }else {
-            user = userRepository.getOne(buyRequest.getUserId());
-            user.setAddress(buyRequest.getAddress());
-            userRepository.save(user);
-        }
-
 //        User user;
-//        if(buyRequest.getUserId() != null){
+//        if(buyRequest.getBillType() == 0){
 //            user = userRepository.getOne(buyRequest.getUserId());
+//        }else if(buyRequest.getBillType() == 1){
+//            List<String> listRoles = Arrays.asList("ROLE_MEMBER");
+//
+//            user = userRepository.save(User.builder()
+//                    .name(buyRequest.getName())
+//                    .roles(listRoles)
+//                    .username("guest")
+//                    .password(passwordEncoder.encode("1"))
+//                    .address(buyRequest.getAddress())
+//                    .age(buyRequest.getAge())
+//                    .email(buyRequest.getEmail())
+//                    .gender(buyRequest.getGender())
+//                    .phone(buyRequest.getPhone())
+//                    .enabled(true)
+//                    .createdAt(new Timestamp(System.currentTimeMillis()))
+//                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+//                    .isDeleted(false).build());
+//
 //        }else {
+//            user = userRepository.getOne(buyRequest.getUserId());
+//            user.setAddress(buyRequest.getAddress());
+//            userRepository.save(user);
+//        }
+
+        User user;
+//        if(buyRequest.getUserId() != null){
+            user = userRepository.getOne(buyRequest.getUserId());
+//        }
+//        else {
 //            List<String> listRoles = Arrays.asList("ROLE_MEMBER");
 //
 //            user = userRepository.save(User.builder()
