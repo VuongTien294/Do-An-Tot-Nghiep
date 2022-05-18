@@ -173,6 +173,11 @@ public class BillServiceImpl implements BillService {
         User user;
         if(buyRequest.getUserId() != null){
             user = userRepository.getOne(buyRequest.getUserId());
+            user.setName(buyRequest.getName());
+            user.setAddress(buyRequest.getAddress());
+            user.setEmail(buyRequest.getEmail());
+            user.setPhone(buyRequest.getPhone());
+            userRepository.save(user);
         }
         else {
             List<String> listRoles = Arrays.asList("ROLE_MEMBER");

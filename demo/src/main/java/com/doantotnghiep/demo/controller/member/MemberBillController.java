@@ -26,7 +26,7 @@ public class MemberBillController {
 //        billService.buyProduct(buyRequest);
 //    }
 
-    @ApiOperation("Api cho phép khách hàng đặt hàng(Tạo bill theo type bill.Nếu type = 0 thì sẽ lấy luôn thông tin theo userId.Nếu = 1 thì tạo mới 1 user và thông tin theo form nhập vào.Nếu = 2 thì sẽ tạo bill theo thông tin của user nhưng sẽ lấy địa chỉ mới do FE truyền xuống)")
+    @ApiOperation("Api cho phép khách hàng đặt hàng(Nếu truyền user id thì tạo 1 bill gắn với user đó và update lại theo FE truyền vào.Nếu ko thì tạo 1 user mới có username = guest,password = 1)")
     @PostMapping("/member/buy")
     public void buy(
             @RequestBody BuyRequest2 buyRequest
