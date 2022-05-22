@@ -11,6 +11,7 @@ public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificati
 
     User findUserByusername(String username);
 
-//    @Query(value = "select count(*) from user u where u.box_contain_type = 0",nativeQuery = true)
+    User findUserByphone(String phone);
+
     Long countUserByEnabled(Boolean enabled);
 }

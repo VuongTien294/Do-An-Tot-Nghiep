@@ -142,6 +142,8 @@ public class BillServiceImpl implements BillService {
     public void buyProduct2(BuyRequest2 buyRequest){
 
         User user;
+
+        //Nếu tìm thấy user theo id thì set thẳng user
         if(buyRequest.getUserId() != null){
             user = userRepository.getOne(buyRequest.getUserId());
             user.setName(buyRequest.getName());
@@ -149,26 +151,51 @@ public class BillServiceImpl implements BillService {
             user.setEmail(buyRequest.getEmail());
             user.setPhone(buyRequest.getPhone());
             userRepository.save(user);
+
+            log.info("Tim thay user theo user id");
         }
         else {
-            String userName = UUID.randomUUID().toString();
+            //Nếu ko tìm thấy thì tìm theo phone
+            User userBuyPhone = userRepository.findUserByphone(buyRequest.getPhone());
 
-            List<String> listRoles = Arrays.asList("ROLE_MEMBER");
+            //Nếu ko thấy thì tạo mới bằng phone người dùng nhập
+            if(Objects.isNull(userBuyPhone)){
+                String userName = UUID.randomUUID().toString();
 
-            user = userRepository.save(User.builder()
-                    .name(buyRequest.getName())
-                    .roles(listRoles)
-                    .username(userName)
-                    .password(passwordEncoder.encode("1"))
-                    .address(buyRequest.getAddress())
-                    .age(buyRequest.getAge())
-                    .email(buyRequest.getEmail())
-                    .gender(buyRequest.getGender())
-                    .phone(buyRequest.getPhone())
-                    .enabled(true)
-                    .createdAt(new Timestamp(System.currentTimeMillis()))
-                    .updatedAt(new Timestamp(System.currentTimeMillis()))
-                    .isDeleted(false).build());
+                List<String> listRoles = Arrays.asList("ROLE_MEMBER");
+
+                user = userRepository.save(User.builder()
+                        .name(buyRequest.getName())
+                        .roles(listRoles)
+                        .username(userName)
+                        .password(passwordEncoder.encode("1"))
+                        .address(buyRequest.getAddress())
+                        .age(buyRequest.getAge())
+                        .email(buyRequest.getEmail())
+                        .gender(buyRequest.getGender())
+                        .phone(buyRequest.getPhone())
+                        .enabled(true)
+                        .createdAt(new Timestamp(System.currentTimeMillis()))
+                        .updatedAt(new Timestamp(System.currentTimeMillis()))
+                        .isDeleted(false).build());
+
+                System.out.println("TH ko tìm thấy phone");
+                log.info("Khong tim thay phone");
+            }else {
+
+                //Nếu tìm thấy thì thay đổi 1 vài trường sau đó save
+                userBuyPhone.setAddress(buyRequest.getAddress());
+                userBuyPhone.setEmail(buyRequest.getEmail());
+                userBuyPhone.setPhone(buyRequest.getPhone());
+                userBuyPhone.setName(buyRequest.getName());
+                userRepository.save(userBuyPhone);
+
+                user = userBuyPhone;
+
+                System.out.println("TH tìm thấy phone");
+                log.info("Tim thay phone");
+            }
+
 
         }
 
@@ -413,4 +440,52 @@ public class BillServiceImpl implements BillService {
         billRepository.save(bill);
 
     }
+
+    @Override
+    public BillListResponse getListBillByPhone(String phone, Integer sortBy, Pageable pageable){
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Bill> cq = cb.createQuery(Bill.class);
+        Root<Bill> root = cq.from(Bill.class);
+        List<Predicate> listPredicate = new ArrayList<>();
+
+        listPredicate.add(cb.equal((root.get("user").get("phone")), phone));
+
+        Path<Object> sort = null;
+        Order order = null;
+
+        if (sortBy != null) {
+            switch (sortBy) {
+                case 0:
+                    sort = root.get("updatedAt");
+                    order = cb.desc(sort);
+                    break;
+                case 1:
+                    sort = root.get("updatedAt");
+                    order = cb.asc(sort);
+            }
+        }
+
+        Predicate[] finalPredicate = new Predicate[listPredicate.size()];
+        listPredicate.toArray(finalPredicate);
+
+        TypedQuery<Bill> query = em.createQuery(cq.select(root).where(cb.and(finalPredicate)).orderBy(order));
+        query.setMaxResults(pageable.getPageSize());
+        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Bill> countRoot = countQuery.from(Bill.class);
+        Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
+
+        List<AdminBillDetailResponse> responseDTOS = new ArrayList<>();
+        query.getResultList().forEach(bill -> responseDTOS.add(billMapper.toListDTO(bill)));
+
+        BillListResponse couponListResponse = new BillListResponse();
+        couponListResponse.setList(responseDTOS);
+        couponListResponse.setTotal(count);
+
+        return couponListResponse;
+
+    }
+
+
 }

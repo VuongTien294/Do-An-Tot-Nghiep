@@ -44,6 +44,16 @@ public class MemberBillController {
         return billService.getListBillForUser(userId, sort,pageable);
     }
 
+    @ApiOperation("Api cho phép khách hàng xem danh sách hàng đã đặt(Không cần đăng nhập.Chỉ cần truyền vào phone)")
+    @GetMapping("/bill/{phone}")
+    public BillListResponse getListBillByPhoneNumber(
+            @PathVariable String phone,
+            @RequestParam(required = true,defaultValue = "0") Integer sort,
+            Pageable pageable
+    ){
+        return billService.getListBillByPhone(phone, sort,pageable);
+    }
+
     @ApiOperation("Api cho khách hàng lấy chi tiết 1 bill")
     @GetMapping("/member/bill/detail/{billId}")
     public MemberBillDetailResponse getDetailBillUser(

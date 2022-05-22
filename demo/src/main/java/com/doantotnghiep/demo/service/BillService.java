@@ -29,4 +29,6 @@ public interface BillService {
     BillListResponse getListBillForUser(Long userId, Integer sortBy, Pageable pageable);
 
     void updateShipper(Long billId, UpdateShipper updateShipper);
+
+    BillListResponse getListBillByPhone(String phone, Integer sortBy, Pageable pageable);
 }
