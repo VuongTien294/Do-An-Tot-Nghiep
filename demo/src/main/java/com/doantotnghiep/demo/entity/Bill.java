@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @SuperBuilder(toBuilder = true)
@@ -25,7 +26,7 @@ public class Bill extends BaseModel{
     private Integer discountPercent;
 
     @Column(name = "price_total")
-    private Long priceTotal;
+    private BigDecimal priceTotal;
 
     @Column(name = "coupon_name")
     private String couponName;

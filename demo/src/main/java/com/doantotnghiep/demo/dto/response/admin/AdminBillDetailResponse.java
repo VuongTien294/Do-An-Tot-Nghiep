@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,7 +16,7 @@ public class AdminBillDetailResponse {
     private Integer status;
     private Long buyDate;
     private Integer discountPercent;
-    private Long priceTotal;
+    private BigDecimal priceTotal;
     private String couponName;
     private String userName;
     private String shipperName;

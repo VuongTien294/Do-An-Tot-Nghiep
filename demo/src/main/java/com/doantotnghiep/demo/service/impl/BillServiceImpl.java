@@ -28,11 +28,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.rmi.server.UID;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -79,96 +77,69 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void buyProduct(BuyRequest buyRequest){
-        User user = userRepository.getOne(buyRequest.getUserId());
-
-        Long priceTotal = Long.valueOf(0);
-        for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
-            Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
-
-            priceTotal = priceTotal + product.getPrice() * Long.valueOf(buyRequest.getListBillProducts().get(i).getQuantity());
-        }
-
-        String couponName;
-        if(buyRequest.getDiscountPersent() != 0){
-            couponName = buyRequest.getCouponName();
-            priceTotal = priceTotal - Long.valueOf(priceTotal * buyRequest.getDiscountPersent()) / Long.valueOf(100);
-        }else {
-            couponName = "Nonce Coupon";
-        }
-
-        Bill bill = Bill.builder()
-                .status(BillStatusEnum.CHUA_XU_LY.getCode())
-                .buyDate(new Timestamp(System.currentTimeMillis()))
-                .discountPercent(buyRequest.getDiscountPersent())
-                .priceTotal(priceTotal)
-                .couponName(couponName)
-                .user(user)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .isDeleted(false).build();
-        billRepository.save(bill);
-
-        for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-
-
-            Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
-            product.setTotalQuantity(product.getTotalQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
-            product.setSoldQuantity(product.getSoldQuantity() + buyRequest.getListBillProducts().get(i).getQuantity());
-            productRepository.save(product);
-
-            Size size = sizeRepository.getOne(buyRequest.getListBillProducts().get(i).getSizeId());
-            size.setQuantity(size.getQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
-            sizeRepository.save(size);
-
-            BillProduct billProduct = BillProduct.builder()
-                    .product(product)
-                    .bill(bill)
-                    .unitPrice(product.getPrice())
-                    .quantity(buyRequest.getListBillProducts().get(i).getQuantity())
-                    .month(calendar.get(Calendar.MONTH) + 1)
-                    .year(calendar.get(Calendar.YEAR))
-                    .createdAt(new Timestamp(System.currentTimeMillis()))
-                    .updatedAt(new Timestamp(System.currentTimeMillis()))
-                    .isDeleted(false)
-                    .build();
-
-            billProductRepository.save(billProduct);
-        }
+//        User user = userRepository.getOne(buyRequest.getUserId());
+//
+//        Long priceTotal = Long.valueOf(0);
+//        for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
+//            Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
+//
+//            priceTotal = priceTotal + product.getPrice() * Long.valueOf(buyRequest.getListBillProducts().get(i).getQuantity());
+//        }
+//
+//        String couponName;
+//        if(buyRequest.getDiscountPersent() != 0){
+//            couponName = buyRequest.getCouponName();
+//            priceTotal = priceTotal - Long.valueOf(priceTotal * buyRequest.getDiscountPersent()) / Long.valueOf(100);
+//        }else {
+//            couponName = "Nonce Coupon";
+//        }
+//
+//        Bill bill = Bill.builder()
+//                .status(BillStatusEnum.CHUA_XU_LY.getCode())
+//                .buyDate(new Timestamp(System.currentTimeMillis()))
+//                .discountPercent(buyRequest.getDiscountPersent())
+//                .priceTotal(priceTotal)
+//                .couponName(couponName)
+//                .user(user)
+//                .createdAt(new Timestamp(System.currentTimeMillis()))
+//                .updatedAt(new Timestamp(System.currentTimeMillis()))
+//                .isDeleted(false).build();
+//        billRepository.save(bill);
+//
+//        for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTimeInMillis(System.currentTimeMillis());
+//
+//
+//            Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
+//            product.setTotalQuantity(product.getTotalQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
+//            product.setSoldQuantity(product.getSoldQuantity() + buyRequest.getListBillProducts().get(i).getQuantity());
+//            productRepository.save(product);
+//
+//            Size size = sizeRepository.getOne(buyRequest.getListBillProducts().get(i).getSizeId());
+//            size.setQuantity(size.getQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
+//            sizeRepository.save(size);
+//
+//            BillProduct billProduct = BillProduct.builder()
+//                    .product(product)
+//                    .bill(bill)
+//                    .unitPrice(product.getPrice())
+//                    .quantity(buyRequest.getListBillProducts().get(i).getQuantity())
+//                    .month(calendar.get(Calendar.MONTH) + 1)
+//                    .year(calendar.get(Calendar.YEAR))
+//                    .createdAt(new Timestamp(System.currentTimeMillis()))
+//                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+//                    .isDeleted(false)
+//                    .build();
+//
+//            billProductRepository.save(billProduct);
+//        }
 
 
     }
 
     @Override
     public void buyProduct2(BuyRequest2 buyRequest){
-
-//        User user;
-//        if(buyRequest.getBillType() == 0){
-//            user = userRepository.getOne(buyRequest.getUserId());
-//        }else if(buyRequest.getBillType() == 1){
-//            List<String> listRoles = Arrays.asList("ROLE_MEMBER");
-//
-//            user = userRepository.save(User.builder()
-//                    .name(buyRequest.getName())
-//                    .roles(listRoles)
-//                    .username("guest")
-//                    .password(passwordEncoder.encode("1"))
-//                    .address(buyRequest.getAddress())
-//                    .age(buyRequest.getAge())
-//                    .email(buyRequest.getEmail())
-//                    .gender(buyRequest.getGender())
-//                    .phone(buyRequest.getPhone())
-//                    .enabled(true)
-//                    .createdAt(new Timestamp(System.currentTimeMillis()))
-//                    .updatedAt(new Timestamp(System.currentTimeMillis()))
-//                    .isDeleted(false).build());
-//
-//        }else {
-//            user = userRepository.getOne(buyRequest.getUserId());
-//            user.setAddress(buyRequest.getAddress());
-//            userRepository.save(user);
-//        }
 
         User user;
         if(buyRequest.getUserId() != null){
@@ -180,12 +151,14 @@ public class BillServiceImpl implements BillService {
             userRepository.save(user);
         }
         else {
+            String userName = UUID.randomUUID().toString();
+
             List<String> listRoles = Arrays.asList("ROLE_MEMBER");
 
             user = userRepository.save(User.builder()
                     .name(buyRequest.getName())
                     .roles(listRoles)
-                    .username("guest")
+                    .username(userName)
                     .password(passwordEncoder.encode("1"))
                     .address(buyRequest.getAddress())
                     .age(buyRequest.getAge())
