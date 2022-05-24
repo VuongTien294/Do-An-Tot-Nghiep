@@ -43,4 +43,10 @@ public class Bill extends BaseModel{
 
     @Column(name = "shipper_phone")
     private String shipperPhone;
+
+    @Column(name = "month")
+    private Integer month;
+
+    @Column(name = "year")
+    private Integer year;
 }

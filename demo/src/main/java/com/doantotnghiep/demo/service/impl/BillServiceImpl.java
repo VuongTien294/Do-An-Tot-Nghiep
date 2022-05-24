@@ -207,6 +207,9 @@ public class BillServiceImpl implements BillService {
             couponName = "Nonce Coupon";
         }
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
         Bill bill = Bill.builder()
                 .status(BillStatusEnum.CHUA_XU_LY.getCode())
                 .buyDate(new Timestamp(System.currentTimeMillis()))
@@ -216,12 +219,15 @@ public class BillServiceImpl implements BillService {
                 .user(user)
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .isDeleted(false).build();
+                .isDeleted(false)
+                .month(calendar.get(Calendar.MONTH) + 1)
+                .year(calendar.get(Calendar.YEAR))
+                .build();
         billRepository.save(bill);
 
         for(int i= 0 ;i< buyRequest.getListBillProducts().size();i++){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
+            Calendar calendarBillProduct = Calendar.getInstance();
+            calendarBillProduct.setTimeInMillis(System.currentTimeMillis());
 
             Product product = productRepository.getOne(buyRequest.getListBillProducts().get(i).getProductId());
             product.setTotalQuantity(product.getTotalQuantity() - buyRequest.getListBillProducts().get(i).getQuantity());
@@ -237,8 +243,8 @@ public class BillServiceImpl implements BillService {
                     .bill(bill)
                     .unitPrice(product.getPrice())
                     .quantity(buyRequest.getListBillProducts().get(i).getQuantity())
-                    .month(calendar.get(Calendar.MONTH) + 1)
-                    .year(calendar.get(Calendar.YEAR))
+                    .month(calendarBillProduct.get(Calendar.MONTH) + 1)
+                    .year(calendarBillProduct.get(Calendar.YEAR))
                     .createdAt(new Timestamp(System.currentTimeMillis()))
                     .updatedAt(new Timestamp(System.currentTimeMillis()))
                     .isDeleted(false)

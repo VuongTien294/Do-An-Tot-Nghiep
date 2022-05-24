@@ -1,6 +1,7 @@
 package com.doantotnghiep.demo.service.impl;
 
 import com.doantotnghiep.demo.dto.response.admin.*;
+import com.doantotnghiep.demo.dto.response.user.BillDashBoardResponse;
 import com.doantotnghiep.demo.dto.response.user.BillProductDetailResponse;
 import com.doantotnghiep.demo.entity.Bill;
 import com.doantotnghiep.demo.entity.BillProduct;
@@ -61,8 +62,8 @@ public class DashBoardServiceImpl implements DashBoardService {
     @Override
     public DashBoardBodyResponse getListDashBoard(Integer month, Integer year, Integer sortBy, Pageable pageable){
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<BillProduct> cq = cb.createQuery(BillProduct.class);
-        Root<BillProduct> root = cq.from(BillProduct.class);
+        CriteriaQuery<Bill> cq = cb.createQuery(Bill.class);
+        Root<Bill> root = cq.from(Bill.class);
         List<Predicate> listPredicate = new ArrayList<>();
 
         listPredicate.add(cb.equal((root.get("month")), month));
@@ -87,34 +88,88 @@ public class DashBoardServiceImpl implements DashBoardService {
         Predicate[] finalPredicate = new Predicate[listPredicate.size()];
         listPredicate.toArray(finalPredicate);
 
-        TypedQuery<BillProduct> query = em.createQuery(cq.select(root).where(cb.and(finalPredicate)).orderBy(order));
+        TypedQuery<Bill> query = em.createQuery(cq.select(root).where(cb.and(finalPredicate)).orderBy(order));
         query.setMaxResults(pageable.getPageSize());
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
 
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<BillProduct> countRoot = countQuery.from(BillProduct.class);
-        Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
+        Root<Bill> countRoot = countQuery.from(Bill.class);
 
-        List<BillProductDetailResponse> responseDTOS = new ArrayList<>();
-        query.getResultList().forEach(bill -> responseDTOS.add(billProductMapper.toListDTO(bill)));
+        List<BillDashBoardResponse> responseDTOS = new ArrayList<>();
+        query.getResultList().forEach(bill -> responseDTOS.add(billProductMapper.toDashBoard(bill)));
 
-        Long soldQuantity = Long.valueOf(0);
-        Long totalPrice = Long.valueOf(0);
+        Double totalPrice = Double.valueOf(0);
 
         for(int i = 0;i< responseDTOS.size();i++){
-            soldQuantity = soldQuantity + responseDTOS.get(i).getQuantity();
-            totalPrice = totalPrice + responseDTOS.get(i).getUnitPrice()*responseDTOS.get(i).getQuantity();
+            totalPrice = totalPrice + responseDTOS.get(i).getPriceTotal().doubleValue();
         }
 
         DashBoardBodyResponse dashBoardBodyResponse = new DashBoardBodyResponse();
-        dashBoardBodyResponse.setSoldQuantity(soldQuantity);
+//        dashBoardBodyResponse.setSoldQuantity(soldQuantity);
         dashBoardBodyResponse.setTotalPrice(totalPrice);
-        dashBoardBodyResponse.setList(responseDTOS);
+//        dashBoardBodyResponse.setList(responseDTOS);
 
 
         return dashBoardBodyResponse;
 
     }
+
+//    public DashBoardBodyResponse getListDashBoard(Integer month, Integer year, Integer sortBy, Pageable pageable){
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<BillProduct> cq = cb.createQuery(BillProduct.class);
+//        Root<BillProduct> root = cq.from(BillProduct.class);
+//        List<Predicate> listPredicate = new ArrayList<>();
+//
+//        listPredicate.add(cb.equal((root.get("month")), month));
+//
+//        listPredicate.add(cb.equal((root.get("year")), year));
+//
+//        Path<Object> sort = null;
+//        Order order = null;
+//
+//        if (sortBy != null) {
+//            switch (sortBy) {
+//                case 0:
+//                    sort = root.get("updatedAt");
+//                    order = cb.desc(sort);
+//                    break;
+//                case 1:
+//                    sort = root.get("updatedAt");
+//                    order = cb.asc(sort);
+//            }
+//        }
+//
+//        Predicate[] finalPredicate = new Predicate[listPredicate.size()];
+//        listPredicate.toArray(finalPredicate);
+//
+//        TypedQuery<BillProduct> query = em.createQuery(cq.select(root).where(cb.and(finalPredicate)).orderBy(order));
+//        query.setMaxResults(pageable.getPageSize());
+//        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+//
+//        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+//        Root<BillProduct> countRoot = countQuery.from(BillProduct.class);
+//        Long count = em.createQuery(countQuery.select(cb.count(countRoot)).where(cb.and(finalPredicate))).getSingleResult();
+//
+//        List<BillProductDetailResponse> responseDTOS = new ArrayList<>();
+//        query.getResultList().forEach(bill -> responseDTOS.add(billProductMapper.toListDTO(bill)));
+//
+//        Long soldQuantity = Long.valueOf(0);
+//        Long totalPrice = Long.valueOf(0);
+//
+//        for(int i = 0;i< responseDTOS.size();i++){
+//            soldQuantity = soldQuantity + responseDTOS.get(i).getQuantity();
+//            totalPrice = totalPrice + responseDTOS.get(i).getUnitPrice()*responseDTOS.get(i).getQuantity();
+//        }
+//
+//        DashBoardBodyResponse dashBoardBodyResponse = new DashBoardBodyResponse();
+//        dashBoardBodyResponse.setSoldQuantity(soldQuantity);
+//        dashBoardBodyResponse.setTotalPrice(totalPrice);
+//        dashBoardBodyResponse.setList(responseDTOS);
+//
+//
+//        return dashBoardBodyResponse;
+//
+//    }
 
 
 }

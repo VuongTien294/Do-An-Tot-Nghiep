@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class DashBoardBodyResponse {
     private Long soldQuantity;
-    private Long totalPrice;
+    private Double totalPrice;
 
     private List<BillProductDetailResponse> list;
 
