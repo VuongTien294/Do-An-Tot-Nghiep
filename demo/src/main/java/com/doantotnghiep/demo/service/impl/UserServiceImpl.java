@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService , UserDetailsService {
         }
 
         User userPhone = userRepository.findUserByphone(addUserRequest.getPhone());
-        if (userUserName != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Đã có username này trong database");
+        if (userPhone != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Đã có phone này trong database");
         }
 
         List<String> listRoles = Arrays.asList("ROLE_MEMBER");
