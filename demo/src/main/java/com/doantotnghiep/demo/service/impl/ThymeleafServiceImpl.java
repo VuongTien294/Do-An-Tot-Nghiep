@@ -1,4 +1,6 @@
 package com.doantotnghiep.demo.service.impl;
+import com.doantotnghiep.demo.entity.Bill;
+import com.doantotnghiep.demo.entity.BillProduct;
 import com.doantotnghiep.demo.service.ThymeleafService;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.util.List;
+
 @Service
 public class ThymeleafServiceImpl implements ThymeleafService {
     private static final String MAIL_TEMPLATE_BASE_NAME = "mail/MailMessages";
@@ -17,6 +21,8 @@ public class ThymeleafServiceImpl implements ThymeleafService {
     private static final String UTF_8 = "UTF-8";
 
     private static final String TEMPLATE_NAME = "thuphanhoicontact";
+
+    private static final String TEMPLATE_BILL_NAME = "guibill";
 
     private static TemplateEngine templateEngine;
 
@@ -52,6 +58,12 @@ public class ThymeleafServiceImpl implements ThymeleafService {
         context.setVariable("user_last_name", user_last_name);
         context.setVariable("message", message);
         return templateEngine.process(TEMPLATE_NAME, context);
+    }
+
+    public String getContentBill(List<BillProduct> list) {
+        final Context context = new Context();
+        context.setVariable("billDetail", list);
+        return templateEngine.process(TEMPLATE_BILL_NAME, context);
     }
 
 }

@@ -15,6 +15,7 @@ import com.doantotnghiep.demo.mapper.BillMapper;
 import com.doantotnghiep.demo.mapper.BillProductMapper;
 import com.doantotnghiep.demo.repository.*;
 import com.doantotnghiep.demo.service.BillService;
+import com.doantotnghiep.demo.service.MailService;
 import com.doantotnghiep.demo.ultil.BillStatusEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,7 @@ public class BillServiceImpl implements BillService {
     private final SizeRepository sizeRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     @PersistenceContext
     private EntityManager em;
@@ -252,6 +254,9 @@ public class BillServiceImpl implements BillService {
 
             billProductRepository.save(billProduct);
         }
+
+        List<BillProduct> listBillProduct = billProductRepository.getBillProductByBillId(bill.getId());
+        mailService.sendBill(listBillProduct,user.getEmail());
 
 
     }

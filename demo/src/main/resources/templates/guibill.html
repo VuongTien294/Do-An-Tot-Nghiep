@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="//cdn.quilljs.com/1.2.6/quill.snow.css">
+    <title>Document</title>
+    <style>
+        .container {
+            background-repeat: no-repeat;
+            background-image: url("https://s3.ap-southeast-1.amazonaws.com/staging-storage-dfy/upload/4f1f136f93214a2f9087ee7099b3d98a1649307547205");
+            background-size: auto;
+            background-position: right -90px;
+            padding: 26px 40px;
+            padding-bottom: 60px;
+            width: 660px;
+            margin: 0 auto;
+        }
+
+        #logo {
+            display: inline-block;
+            margin-bottom: 28px;
+        }
+
+        #box {
+            background: #757575;
+            border-radius: 20px;
+            height: 252px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="head" style="text-align: center">
+        <img id="logo"
+             src="https://s3.ap-southeast-1.amazonaws.com/staging-storage-dfy/upload/730c9ec6134d4c99b0f8c3202d59fc3e1649838903623"
+             alt="logo-dog-kingdom"/>
+<!--        <div id="box"></div>-->
+    </div>
+    <div>
+        <th:block th:utext="${content}">Your Bill:</th:block>
+        <table>
+            <th:block th:each="billProduct : ${billDetail}">
+                <tr>
+                    <!--                    <td th:text="${file.type}">...</td>-->
+                    <td th:text="${billProduct.product.name}">...</td>
+                    <td th:text="${billProduct.quantity}">...</td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+</div>
+</body>
+
+</html>

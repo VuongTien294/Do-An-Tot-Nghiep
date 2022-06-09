@@ -1,4 +1,5 @@
 package com.doantotnghiep.demo.service.impl;
+import com.doantotnghiep.demo.entity.BillProduct;
 import com.doantotnghiep.demo.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -52,6 +54,34 @@ public class MailServiceImpl implements MailService {
             message.setFrom(new InternetAddress(email));
             message.setSubject("Shop Giày Của Tiến Đẹp Trai!");
             message.setContent(thymeleafService.getContent(user_last_name,responseMessage), CONTENT_TYPE_TEXT_HTML);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendBill(List<BillProduct> list, String receiver) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", port);
+
+        Session session = Session.getInstance(props,
+                new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(email, password);
+                    }
+                });
+        Message message = new MimeMessage(session);
+        try {
+            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(receiver)});
+
+            message.setFrom(new InternetAddress(email));
+            message.setSubject("Shop Giày Dép!");
+            message.setContent(thymeleafService.getContentBill(list), CONTENT_TYPE_TEXT_HTML);
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
