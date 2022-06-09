@@ -1,12 +1,9 @@
 package com.doantotnghiep.demo.config;
-import java.util.Properties;
 
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.core.env.Environment;
-//import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 
 import static org.thymeleaf.templatemode.TemplateMode.HTML;
 
@@ -16,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 
 @Configuration
@@ -61,5 +59,17 @@ public class MailConfiguration {
         springTemplateEngine.setTemplateResolver(templateResolver);
         return springTemplateEngine;
     }
+
+    @Bean
+    public ClassLoaderTemplateResolver emailTemplateResolver() {
+        ClassLoaderTemplateResolver pdfTemplateResolver = new ClassLoaderTemplateResolver();
+        pdfTemplateResolver.setPrefix("classpath:/templates/");
+        pdfTemplateResolver.setSuffix(".html");
+        pdfTemplateResolver.setTemplateMode("HTML5");
+        pdfTemplateResolver.setCharacterEncoding("UTF-8");
+        pdfTemplateResolver.setOrder(1);
+        return pdfTemplateResolver;
+    }
+
 
 }

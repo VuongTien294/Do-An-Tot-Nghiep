@@ -31,4 +31,6 @@ public interface BillService {
     void updateShipper(Long billId, UpdateShipper updateShipper);
 
     BillListResponse getListBillByPhone(String phone, Integer sortBy, Pageable pageable);
+
+    void genPDF(Long billId);
 }

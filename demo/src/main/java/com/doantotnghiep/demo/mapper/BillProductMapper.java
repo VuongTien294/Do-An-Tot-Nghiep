@@ -1,5 +1,6 @@
 package com.doantotnghiep.demo.mapper;
 
+import com.doantotnghiep.demo.dto.response.pdf.BillProductInfo;
 import com.doantotnghiep.demo.dto.response.user.BillDashBoardResponse;
 import com.doantotnghiep.demo.dto.response.user.BillProductDetailResponse;
 import com.doantotnghiep.demo.entity.Bill;
@@ -22,6 +23,16 @@ public class BillProductMapper {
         BillDashBoardResponse dto = new BillDashBoardResponse();
         dto.setId(bill.getId());
         dto.setPriceTotal(bill.getPriceTotal());
+        return dto;
+    }
+
+    public BillProductInfo toBillProductInfo(BillProduct billProduct) {
+        BillProductInfo dto = new BillProductInfo();
+        dto.setProductName(billProduct.getProduct().getName());
+        dto.setUnitPrice(billProduct.getUnitPrice());
+        dto.setQuantity(billProduct.getQuantity());
+        dto.setTotal(billProduct.getUnitPrice() * billProduct.getQuantity());
+
         return dto;
     }
 }

@@ -8,6 +8,7 @@ import com.doantotnghiep.demo.dto.request.user.BuyRequest2;
 import com.doantotnghiep.demo.dto.response.admin.AdminBillDetailResponse;
 import com.doantotnghiep.demo.dto.response.admin.BillListResponse;
 import com.doantotnghiep.demo.dto.response.admin.DashBoardBodyResponse;
+import com.doantotnghiep.demo.dto.response.pdf.BillProductInfo;
 import com.doantotnghiep.demo.dto.response.user.BillProductDetailResponse;
 import com.doantotnghiep.demo.dto.response.user.MemberBillDetailResponse;
 import com.doantotnghiep.demo.entity.*;
@@ -16,6 +17,7 @@ import com.doantotnghiep.demo.mapper.BillProductMapper;
 import com.doantotnghiep.demo.repository.*;
 import com.doantotnghiep.demo.service.BillService;
 import com.doantotnghiep.demo.service.MailService;
+import com.doantotnghiep.demo.service.PdfGenerateService;
 import com.doantotnghiep.demo.ultil.BillStatusEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.rmi.server.UID;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -47,6 +48,7 @@ public class BillServiceImpl implements BillService {
 
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final PdfGenerateService pdfGenerateService;
 
     @PersistenceContext
     private EntityManager em;
@@ -497,6 +499,28 @@ public class BillServiceImpl implements BillService {
         return couponListResponse;
 
     }
+
+    @Override
+    public void genPDF(Long billId){
+        Map<String, Object> data = new HashMap<>();
+
+        Bill bill = billRepository.getOne(billId);
+        data.put("bill",bill);
+
+        User user = bill.getUser();
+        data.put("user",user);
+
+        List<BillProduct> list = billProductRepository.getBillProductByBillId(billId);
+
+        List<BillProductInfo> list1 = new ArrayList<>();
+        for(BillProduct element : list){
+            list1.add(billProductMapper.toBillProductInfo(element));
+        }
+        data.put("list",list1);
+
+        pdfGenerateService.generatePdfFile("BillGen", data, bill.getUser().getName()+bill.getId()+".pdf");
+    }
+
 
 
 }

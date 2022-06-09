@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        h1{
+            color: brown;
+        }
+        .quotation {
+            width: 100%;
+        }
+        .quotation, .quotation th, .quotation td {
+            border: 1px solid brown;
+            border-collapse: collapse;
+        }
+        .quotation th {
+            background-color: brown;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h1>Order confirmed</h1>
+<table>
+    <tr>
+        <th>Customer</th>
+    </tr>
+    <tr>
+        <td th:text="'Customer Name: ' + ${user.name}"></td>
+    </tr>
+    <tr>
+        <td th:text="'Customer Address: ' + ${user.address}"></td>
+    </tr>
+    <tr>
+        <td th:text="'Customer Email: ' + ${user.email}"></td>
+    </tr>
+    <tr>
+        <td th:text="'Customer Phone: ' + ${user.phone}"></td>
+    </tr>
+</table>
+<br />
+<table class="quotation">
+    <tr>
+        <th>Item #</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+    </tr>
+    <tr th:each="item,iterStat : ${list}">
+        <td th:text="${iterStat.index + 1}"></td>
+        <td th:text="${item.productName}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.unitPrice}"></td>
+        <td th:text="${item.total}"></td>
+    </tr>
+</table>
+<br />
+<div>
+<table>
+    <tr>
+        <td th:text="'Coupon Percent: ' + ${bill.discountPercent} +'%'"></td>
+    </tr>
+    <tr>
+        <td th:text="'Total Price: ' + ${bill.priceTotal}+'$'"></td>
+    </tr>
+</table>
+</div>
+<br />
+<div th:width="1000px">
+    <tr>
+        <td th:text="'Thank you so much!'"></td>
+    </tr>
+</div>
+</body>
+</html>

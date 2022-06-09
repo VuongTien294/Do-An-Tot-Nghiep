@@ -63,4 +63,13 @@ public class MemberBillController {
     ){
         return billService.getBillDetail(billId , sort , pageable);
     }
+
+    @ApiOperation("Api cho khách hàng lấy chi tiết 1 bill")
+    @GetMapping("/bill/export-pdf/{billId}")
+    public void getExportBillUser(
+            @PathVariable Long billId
+    ){
+        billService.genPDF(billId);
+    }
+
 }
