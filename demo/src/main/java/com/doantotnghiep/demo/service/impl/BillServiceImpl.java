@@ -257,8 +257,8 @@ public class BillServiceImpl implements BillService {
             billProductRepository.save(billProduct);
         }
 
-        List<BillProduct> listBillProduct = billProductRepository.getBillProductByBillId(bill.getId());
-        mailService.sendBill(listBillProduct,user.getEmail());
+//        List<BillProduct> listBillProduct = billProductRepository.getBillProductByBillId(bill.getId());
+//        mailService.sendBill(listBillProduct,user.getEmail());
 
 
     }

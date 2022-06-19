@@ -55,7 +55,7 @@ public class MemberBillController {
     }
 
     @ApiOperation("Api cho khách hàng lấy chi tiết 1 bill")
-    @GetMapping("/member/bill/detail/{billId}")
+    @GetMapping("/bill/detail/{billId}")
     public MemberBillDetailResponse getDetailBillUser(
             @PathVariable Long billId,
             @RequestParam(required = true,defaultValue = "0") Integer sort,

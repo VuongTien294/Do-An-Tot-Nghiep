@@ -121,6 +121,32 @@ public class ProductServiceImpl implements ProductService {
             product.setImage(modifiedProductRequest.getImage());
         }
 
+        //
+
+        if(modifiedProductRequest.getGender() != null){
+            product.setGender(modifiedProductRequest.getGender());
+        }
+
+        if(modifiedProductRequest.getBranch() != null){
+            product.setBranch(modifiedProductRequest.getBranch());
+        }
+
+        if(modifiedProductRequest.getStyle() != null){
+            product.setStyle(modifiedProductRequest.getStyle());
+        }
+
+        if(modifiedProductRequest.getColor() != null){
+            product.setColor(modifiedProductRequest.getColor());
+        }
+
+        if(modifiedProductRequest.getMaterial() != null){
+            product.setMaterial(modifiedProductRequest.getMaterial());
+        }
+
+        if(modifiedProductRequest.getTechnology() != null){
+            product.setTechnology(modifiedProductRequest.getTechnology());
+        }
+
         product.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
         productRepository.save(product);
@@ -139,6 +165,7 @@ public class ProductServiceImpl implements ProductService {
 //            sizeRepository.save(size);
 //        }
 
+        Integer quantity = 0;
         for(int i = 0 ; i< modifiedProductRequest.getListSize().size();i++){
 
             if(modifiedProductRequest.getListSize().get(i).getId() != null){
@@ -146,6 +173,8 @@ public class ProductServiceImpl implements ProductService {
                 size.setName(modifiedProductRequest.getListSize().get(i).getName());
                 size.setQuantity(modifiedProductRequest.getListSize().get(i).getQuantity());
                 size.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+                quantity = quantity + modifiedProductRequest.getListSize().get(i).getQuantity();
                 sizeRepository.save(size);
             }else {
                 Size size = Size.builder()
@@ -157,10 +186,16 @@ public class ProductServiceImpl implements ProductService {
                         .product(product)
                         .build();
 
+                quantity = quantity + modifiedProductRequest.getListSize().get(i).getQuantity();
+
                 sizeRepository.save(size);
 
             }
         }
+
+        product.setTotalQuantity(quantity);
+        productRepository.save(product);
+
     }
 
     @Override
