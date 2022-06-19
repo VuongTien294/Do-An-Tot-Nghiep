@@ -252,13 +252,14 @@ public class BillServiceImpl implements BillService {
                     .createdAt(new Timestamp(System.currentTimeMillis()))
                     .updatedAt(new Timestamp(System.currentTimeMillis()))
                     .isDeleted(false)
+                    .sizeId(size.getId())
+                    .sizeName(size.getName())
                     .build();
 
             billProductRepository.save(billProduct);
         }
 
-//        List<BillProduct> listBillProduct = billProductRepository.getBillProductByBillId(bill.getId());
-//        mailService.sendBill(listBillProduct,user.getEmail());
+
 
 
     }
@@ -388,7 +389,30 @@ public class BillServiceImpl implements BillService {
     @Override
     public void changeBillStatus(Long billId, ChangeBillStatus changeBillStatus){
         Bill bill = billRepository.getOne(billId);
-        bill.setStatus(changeBillStatus.getBillStatus());
+
+        if(changeBillStatus.getBillStatus().equals(BillStatusEnum.DA_HUY.getCode())){
+            bill.setStatus(changeBillStatus.getBillStatus());
+
+            List<BillProduct> list = billProductRepository.getBillProductByBillId(billId);
+
+            for (BillProduct element: list) {
+                Size size = sizeRepository.getOne(element.getSizeId());
+
+                size.setQuantity(size.getQuantity() + element.getQuantity());
+
+                sizeRepository.save(size);
+
+                Product product = size.getProduct();
+
+                product.setTotalQuantity(product.getTotalQuantity() + element.getQuantity());
+                product.setSoldQuantity(product.getSoldQuantity() - element.getQuantity());
+
+                productRepository.save(product);
+            }
+        }else{
+            bill.setStatus(changeBillStatus.getBillStatus());
+        }
+
 
         if(changeBillStatus.getReasonCancel() != null){
             bill.setReasonCancel(changeBillStatus.getReasonCancel());

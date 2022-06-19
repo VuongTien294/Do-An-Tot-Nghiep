@@ -31,7 +31,9 @@ public class BillProductMapper {
         dto.setProductName(billProduct.getProduct().getName());
         dto.setUnitPrice(billProduct.getUnitPrice());
         dto.setQuantity(billProduct.getQuantity());
+        dto.setSizeName(billProduct.getSizeName());
         dto.setTotal(billProduct.getUnitPrice() * billProduct.getQuantity());
+
 
         return dto;
     }

@@ -34,4 +34,10 @@ public class BillProduct extends BaseModel{
     @Column(name = "year")
     private Integer year;
 
+    @Column(name = "size_id")
+    private Long sizeId;
+
+    @Column(name = "size_name")
+    private String sizeName;
+
 }

@@ -8,4 +8,5 @@ public class BillProductInfo {
     private Integer quantity;
     private Long unitPrice;
     private Long total;
+    private String sizeName;
 }
